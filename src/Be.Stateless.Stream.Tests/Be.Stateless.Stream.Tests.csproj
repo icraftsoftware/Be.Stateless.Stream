@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.2;net472</TargetFrameworks>
+    <RootNamespace>Be.Stateless</RootNamespace>
+    <AssemblyTitle>Be.Stateless.Stream.Tests</AssemblyTitle>
+    <Description>Unit testing for stream class library for general .NET development.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="IO\Data\utf-16.xml" />
+    <None Remove="IO\Data\utf-8.xml" />
+    <None Remove="IO\Extensions\Schema.xsd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="IO\Data\utf-16.xml" />
+    <EmbeddedResource Include="IO\Data\utf-8.xml" />
+    <EmbeddedResource Include="IO\Extensions\Schema.xsd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Be.Stateless.Common" Version="2.0.20012.36934" />
+    <PackageReference Include="FluentAssertions" Version="5.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0-preview-20200110-02" />
+    <PackageReference Include="Moq" Version="4.13.1" />
+    <PackageReference Include="xunit.core" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Be.Stateless.Stream\Be.Stateless.Stream.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+    <Reference Include="System.Transactions" />
+  </ItemGroup>
+
+</Project>

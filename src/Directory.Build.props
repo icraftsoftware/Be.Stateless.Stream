@@ -1,0 +1,38 @@
+<!-- see https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build?view=vs-2019 -->
+<Project>
+
+  <PropertyGroup>
+    <DelaySign Condition=" '$(DelaySign)' == '' ">true</DelaySign>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile Condition=" '$(DelaySign)' == 'true' ">..\..\build\be.stateless.public.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile Condition=" '$(DelaySign)' == 'false' ">..\..\build\be.stateless.snk</AssemblyOriginatorKeyFile>
+
+    <Major Condition=" '$(Major)' == '' ">2</Major>
+    <Minor Condition=" '$(Minor)' == '' ">0</Minor>
+    <Build Condition=" '$(Build)' == '' ">$([System.DateTime]::Now.ToString("yy"))$([System.DateTime]::Now.DayOfYear.ToString("000"))</Build>
+    <!--<Revision Condition=" '$(Revision)' == '' ">$([System.Convert]::ToInt32($([MSBuild]::Divide($([System.TimeSpan]::FromTicks($([MSBuild]::Subtract( $([System.DateTime]::Now.Ticks), $([System.DateTime]::Today.Ticks)))).TotalSeconds), 1.4))))</Revision>-->
+    <Revision Condition=" '$(Revision)' == '' ">0</Revision>
+
+    <!-- https://github.com/dotnet/sdk/issues/2 -->
+    <AssemblyVersion>$(Major).$(Minor).0.0</AssemblyVersion>
+    <Authors>François Chabot</Authors>
+    <Company>be.stateless</Company>
+    <Copyright>Copyright © 2012 - $([System.DateTime]::Now.Year) be.stateless. All rights reserved.</Copyright>
+    <FileVersion>$(Major).$(Minor).$(Build).$(Revision)</FileVersion>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageVersion>$(Major).$(Minor).$(Build).$(Revision)</PackageVersion>
+    <Product>.NET Factory ($(Configuration) Build)</Product>
+    <!--<VersionPrefix>$(Major).$(Minor).$(Build).$(Revision)</VersionPrefix>-->
+    <Version>$(Major).$(Minor).$(Build).$(Revision)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\build\be.stateless.public.snk" Link="be.stateless.public.snk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+</Project>
