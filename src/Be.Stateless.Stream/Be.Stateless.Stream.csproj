@@ -25,8 +25,13 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>bin\Release\$(AssemblyTitle).xml</DocumentationFile>
+    <NoWarn>1701;1702</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Be.Stateless.Extensions" Version="2.0.20005.55750" />
+    <PackageReference Include="Be.Stateless.Extensions" Version="2.0.20026.18624" />
     <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>

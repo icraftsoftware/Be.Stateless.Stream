@@ -1,4 +1,4 @@
-<!-- see https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build?view=vs-2019 -->
+<!-- see https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build -->
 <Project>
 
   <PropertyGroup>
@@ -10,7 +10,6 @@
     <Major Condition=" '$(Major)' == '' ">2</Major>
     <Minor Condition=" '$(Minor)' == '' ">0</Minor>
     <Build Condition=" '$(Build)' == '' ">$([System.DateTime]::Now.ToString("yy"))$([System.DateTime]::Now.DayOfYear.ToString("000"))</Build>
-    <!--<Revision Condition=" '$(Revision)' == '' ">$([System.Convert]::ToInt32($([MSBuild]::Divide($([System.TimeSpan]::FromTicks($([MSBuild]::Subtract( $([System.DateTime]::Now.Ticks), $([System.DateTime]::Today.Ticks)))).TotalSeconds), 1.4))))</Revision>-->
     <Revision Condition=" '$(Revision)' == '' ">0</Revision>
 
     <!-- https://github.com/dotnet/sdk/issues/2 -->
