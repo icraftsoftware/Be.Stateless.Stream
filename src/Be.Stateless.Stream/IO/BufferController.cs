@@ -200,7 +200,7 @@ namespace Be.Stateless.IO
 		/// </summary>
 		/// <param name="delegate">
 		/// A <see cref="Func{T}"/> delegate with both a signature and semantics identical to the one of the <see
-		/// cref="Stream.Read"/> method.
+		/// cref="Stream.Read(byte[],int,int)"/> method.
 		/// </param>
 		/// <returns>
 		/// The total number of bytes appended to the underlying controlled buffer.
