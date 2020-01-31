@@ -27,8 +27,24 @@ namespace Be.Stateless.IO
 	/// <see cref="FileStream"/> subclass to be used when the underlying stream is transacted and its scoping transaction
 	/// requires and explicit commit because it is not DTC enlisted.
 	/// </summary>
-	public class FileStreamTransacted : FileStream, IStreamTransacted
+	public class TransactionalFileStream : FileStream, ITransactionalStream
 	{
+		#region Nested Type: NativeMethods
+
+		private static class NativeMethods
+		{
+			[DllImport("Kernel32.dll", SetLastError = true)]
+			internal static extern bool CloseHandle(IntPtr handle);
+
+			[DllImport("Ktmw32.dll", SetLastError = true)]
+			internal static extern bool CommitTransaction(IntPtr transaction);
+
+			[DllImport("Ktmw32.dll", SetLastError = true)]
+			internal static extern bool RollbackTransaction(IntPtr transaction);
+		}
+
+		#endregion
+
 		#region TransactionState Enum
 
 		private enum TransactionState
@@ -40,14 +56,15 @@ namespace Be.Stateless.IO
 
 		#endregion
 
-		internal FileStreamTransacted(IntPtr transactionHandle, string path, int bufferSize)
-			: base(FileTransacted.CreateFileTransactedHandle(transactionHandle, path), FileAccess.Write, bufferSize)
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope")]
+		internal TransactionalFileStream(IntPtr transactionHandle, string path, int bufferSize)
+			: base(TransactionalFile.CreateFileTransactedHandle(transactionHandle, path), FileAccess.Write, bufferSize)
 		{
 			if (_logger.IsDebugEnabled) _logger.DebugFormat("Transacted file stream created for writing at path '{0}'.", path);
 			_transactionHandle = transactionHandle;
 		}
 
-		#region IStreamTransacted Members
+		#region ITransactionalStream Members
 
 		public void Commit()
 		{
@@ -75,7 +92,7 @@ namespace Be.Stateless.IO
 			// <see also href="http://msdn.microsoft.com/en-us/magazine/cc163392.aspx"/>
 			// <see also href="http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P"/>
 
-			if (_logger.IsDebugEnabled) _logger.DebugFormat("FileStreamTransacted is {0}.", disposing ? "disposing" : "finalizing");
+			if (_logger.IsDebugEnabled) _logger.DebugFormat("TransactionalFileStream is {0}.", disposing ? "disposing" : "finalizing");
 
 			// stream has to flushed and closed prior to transaction completion
 			base.Dispose(disposing);
@@ -91,7 +108,7 @@ namespace Be.Stateless.IO
 			if (!Completed)
 			{
 				if (_logger.IsWarnEnabled) _logger.Warn("Finalizer with a transaction yet unresolved, that is neither committed nor rolled back.");
-				var result = CloseHandle(_transactionHandle);
+				var result = NativeMethods.CloseHandle(_transactionHandle);
 				if (!result && _logger.IsWarnEnabled)
 					_logger.WarnFormat("Cannot close kernel transaction handle in finalizer. Win32 error code: {0}.", Marshal.GetLastWin32Error());
 				_transactionHandle = IntPtr.Zero;
@@ -105,10 +122,10 @@ namespace Be.Stateless.IO
 		private void CommitTransactionCore()
 		{
 			if (Completed) return;
-			if (_logger.IsDebugEnabled) _logger.Debug("Committing FileStreamTransacted...");
-			var result = CommitTransaction(_transactionHandle);
+			if (_logger.IsDebugEnabled) _logger.Debug("Committing TransactionalFileStream...");
+			var result = NativeMethods.CommitTransaction(_transactionHandle);
 			if (!result) throw new InvalidOperationException($"Cannot commit kernel transaction. Win32 error code: {Marshal.GetLastWin32Error()}.");
-			result = CloseHandle(_transactionHandle);
+			result = NativeMethods.CloseHandle(_transactionHandle);
 			if (!result && _logger.IsWarnEnabled) _logger.WarnFormat("Cannot close kernel transaction handle. Win32 error code: {0}.", Marshal.GetLastWin32Error());
 			_transactionHandle = IntPtr.Zero;
 		}
@@ -116,8 +133,8 @@ namespace Be.Stateless.IO
 		private void RollbackTransactionCore()
 		{
 			if (Completed) return;
-			if (_logger.IsDebugEnabled) _logger.Debug("Rolling back FileStreamTransacted...");
-			var result = RollbackTransaction(_transactionHandle);
+			if (_logger.IsDebugEnabled) _logger.Debug("Rolling back TransactionalFileStream...");
+			var result = NativeMethods.RollbackTransaction(_transactionHandle);
 			if (!result)
 			{
 				var lastWin32Error = Marshal.GetLastWin32Error();
@@ -125,26 +142,13 @@ namespace Be.Stateless.IO
 				throw new InvalidOperationException($"Could not commit a manually managed kernel transaction. Win32 error code: {lastWin32Error}.");
 			}
 
-			result = CloseHandle(_transactionHandle);
+			result = NativeMethods.CloseHandle(_transactionHandle);
 			if (!result && _logger.IsWarnEnabled) _logger.WarnFormat("Cannot close kernel transaction handle. Win32 error code: {0}.", Marshal.GetLastWin32Error());
 			_transactionHandle = IntPtr.Zero;
 		}
 
-		private static readonly ILog _logger = LogManager.GetLogger(typeof(FileStreamTransacted));
+		private static readonly ILog _logger = LogManager.GetLogger(typeof(TransactionalFileStream));
 		private TransactionState _state = TransactionState.Running;
 		private IntPtr _transactionHandle;
-
-		#region External Imports
-
-		[DllImport("Kernel32.dll", SetLastError = true)]
-		private static extern bool CloseHandle(IntPtr handle);
-
-		[DllImport("Ktmw32.dll", SetLastError = true)]
-		private static extern bool CommitTransaction(IntPtr transaction);
-
-		[DllImport("Ktmw32.dll", SetLastError = true)]
-		private static extern bool RollbackTransaction(IntPtr transaction);
-
-		#endregion
 	}
 }

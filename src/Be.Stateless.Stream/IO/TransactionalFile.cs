@@ -26,7 +26,7 @@ using Microsoft.Win32.SafeHandles;
 namespace Be.Stateless.IO
 {
 	/// <summary>
-	/// Provides static methods for the creation of transactional <see cref="FileStream"/> or <see cref="FileStreamTransacted"/>
+	/// Provides static methods for the creation of transactional <see cref="FileStream"/> or <see cref="TransactionalFileStream"/>
 	/// objects.
 	/// </summary>
 	/// <remarks>
@@ -41,8 +41,48 @@ namespace Be.Stateless.IO
 	/// <see href="https://transactionalfilemgr.codeplex.com/">.NET Transactional File Manager</see>.
 	/// </para>
 	/// </remarks>
-	public static class FileTransacted
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
+	public static class TransactionalFile
 	{
+		#region Nested Type: NativeMethods
+
+		private static class NativeMethods
+		{
+			[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+			internal static extern SafeFileHandle CreateFileTransacted(
+				string lpFileName,
+				uint dwDesiredAccess,
+				uint dwShareMode,
+				IntPtr lpSecurityAttributes,
+				uint dwCreationDisposition,
+				uint dwFlagsAndAttributes,
+				IntPtr hTemplateFile,
+				IntPtr hTransaction,
+				IntPtr pusMiniVersion,
+				IntPtr pExtendedParameter);
+
+			[DllImport("Ktmw32.dll", CharSet = CharSet.Unicode)]
+			internal static extern IntPtr CreateTransaction(
+				IntPtr securityAttributes,
+				IntPtr guid,
+				int options,
+				int isolationLevel,
+				int isolationFlags,
+				int milliseconds,
+				string description);
+
+			[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+			internal static extern bool MoveFileTransacted(
+				string lpExistingFileName,
+				string lpNewFileName,
+				IntPtr lpProgressRoutine,
+				IntPtr lpData,
+				uint dwFlags,
+				IntPtr hTransaction);
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Creates a new file in the specified path.
 		/// </summary>
@@ -57,7 +97,7 @@ namespace Be.Stateless.IO
 		/// It defaults to <c>null</c>.
 		/// </param>
 		/// <returns>
-		/// A <see cref="FileStream"/> or <see cref="FileStreamTransacted"/>, depending on whether the transaction has to
+		/// A <see cref="FileStream"/> or <see cref="TransactionalFileStream"/>, depending on whether the transaction has to
 		/// be explicitly (i.e. not DTC enlisted) managed or not, with the specified buffer size that provides write
 		/// access to the file specified in path.
 		/// </returns>
@@ -72,9 +112,9 @@ namespace Be.Stateless.IO
 		/// </para>
 		/// <para>
 		/// If both transactional requirements are met and a <c>null</c> <paramref name="transaction"/> has been passed,
-		/// the stream created will be a <see cref="FileStreamTransacted"/> instance. In this case, the client will be in
+		/// the stream created will be a <see cref="TransactionalFileStream"/> instance. In this case, the client will be in
 		/// charge of <i>explicitly</i> managing the transaction outcome, that is either <see
-		/// cref="FileStreamTransacted.Commit"/> or <see cref="FileStreamTransacted.Rollback"/>.
+		/// cref="TransactionalFileStream.Commit"/> or <see cref="TransactionalFileStream.Rollback"/>.
 		/// </para>
 		/// <para>
 		/// If both transactional requirements are met and a non <c>null</c> <paramref name="transaction"/> has been
@@ -122,8 +162,8 @@ namespace Be.Stateless.IO
 			if (Path.IsNetworkPath(path)) throw new ArgumentException("Cannot create a transacted file in a network volume.", nameof(path));
 			if (!_operatingSystem.SupportTransactionalFileSystem()) throw new InvalidOperationException("File system is not transactional.");
 
-			// FileStreamTransacted necessary as the transaction is not DTC enlisted: transaction must be explicitly managed
-			return new FileStreamTransacted(CreateTransactionHandle(), path, bufferSize);
+			// TransactionalFileStream necessary as the transaction is not DTC enlisted: transaction must be explicitly managed
+			return new TransactionalFileStream(CreateTransactionHandle(), path, bufferSize);
 		}
 
 		/// <summary>
@@ -142,6 +182,7 @@ namespace Be.Stateless.IO
 		/// A <see cref="FileStream"/> with the specified buffer size that provides write access to the file specified in
 		/// path.
 		/// </returns>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope")]
 		private static FileStream CreateTransacted(string path, int bufferSize, IKernelTransaction transaction)
 		{
 			if (Path.IsNetworkPath(path)) throw new ArgumentException("Cannot create a transacted file in a network volume.", nameof(path));
@@ -151,7 +192,7 @@ namespace Be.Stateless.IO
 			transaction.GetHandle(out var transactionHandle);
 			if (transactionHandle == IntPtr.Zero) throw new InvalidOperationException("Cannot get handle to kernel transaction.");
 
-			// FileStreamTransacted unnecessary as the transaction is DTC enlisted: transaction is implicitly managed
+			// TransactionalFileStream unnecessary as the transaction is DTC enlisted: transaction is implicitly managed
 			return new FileStream(CreateFileTransactedHandle(transactionHandle, path), FileAccess.Write, bufferSize);
 		}
 
@@ -173,21 +214,33 @@ namespace Be.Stateless.IO
 		{
 			if (sourceFilePath.IsNullOrEmpty()) throw new ArgumentNullException(nameof(sourceFilePath));
 			if (targetFilePath.IsNullOrEmpty()) throw new ArgumentNullException(nameof(targetFilePath));
+			if (transaction == null) throw new ArgumentNullException(nameof(transaction));
 			if (!_operatingSystem.SupportTransactionalFileSystem()) throw new InvalidOperationException("File system is not transactional.");
 
 			transaction.GetHandle(out var transactionHandle);
 			if (transactionHandle == IntPtr.Zero) throw new InvalidOperationException("Cannot get handle to kernel transaction.");
 
-			var result = MoveFileTransacted(sourceFilePath, targetFilePath, IntPtr.Zero, IntPtr.Zero, 0, transactionHandle);
+			var result = NativeMethods.MoveFileTransacted(sourceFilePath, targetFilePath, IntPtr.Zero, IntPtr.Zero, 0, transactionHandle);
 			if (!result) Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
 		}
+
+		private const uint CREATE_NEW = 1;
+
+		private const uint GENERIC_WRITE = 0x40000000;
+
+		/// <summary>
+		/// <c>internal</c> for the sake of unit testing only.
+		/// </summary>
+		internal static OperatingSystem _operatingSystem = Environment.OSVersion;
+
+		private static readonly ILog _logger = LogManager.GetLogger(typeof(TransactionalFile));
 
 		#region Helpers
 
 		internal static SafeFileHandle CreateFileTransactedHandle(IntPtr transactionHandle, string path)
 		{
 			if (transactionHandle == IntPtr.Zero) throw new ArgumentNullException(nameof(transactionHandle));
-			var fileHandle = CreateFileTransacted(
+			var fileHandle = NativeMethods.CreateFileTransacted(
 				path,
 				GENERIC_WRITE,
 				0,
@@ -210,57 +263,11 @@ namespace Be.Stateless.IO
 
 		private static IntPtr CreateTransactionHandle()
 		{
-			var transactionHandle = CreateTransaction(IntPtr.Zero, IntPtr.Zero, 0, 0, 0, 0, null);
+			var transactionHandle = NativeMethods.CreateTransaction(IntPtr.Zero, IntPtr.Zero, 0, 0, 0, 0, null);
 			if (transactionHandle == IntPtr.Zero) throw new InvalidOperationException("Cannot create kernel transaction.");
 			return transactionHandle;
 		}
 
 		#endregion
-
-		#region External Imports
-
-		[DllImport("kernel32.dll", SetLastError = true)]
-		private static extern SafeFileHandle CreateFileTransacted(
-			string lpFileName,
-			uint dwDesiredAccess,
-			uint dwShareMode,
-			IntPtr lpSecurityAttributes,
-			uint dwCreationDisposition,
-			uint dwFlagsAndAttributes,
-			IntPtr hTemplateFile,
-			IntPtr hTransaction,
-			IntPtr pusMiniVersion,
-			IntPtr pExtendedParameter);
-
-		[DllImport("Ktmw32.dll")]
-		private static extern IntPtr CreateTransaction(
-			IntPtr securityAttributes,
-			IntPtr guid,
-			int options,
-			int isolationLevel,
-			int isolationFlags,
-			int milliseconds,
-			string description);
-
-		[DllImport("kernel32.dll", SetLastError = true)]
-		private static extern bool MoveFileTransacted(
-			string lpExistingFileName,
-			string lpNewFileName,
-			IntPtr lpProgressRoutine,
-			IntPtr lpData,
-			uint dwFlags,
-			IntPtr hTransaction);
-
-		private const uint GENERIC_WRITE = 0x40000000;
-		private const uint CREATE_NEW = 1;
-
-		#endregion
-
-		/// <summary>
-		/// <c>internal</c> for the sake of unit testing only.
-		/// </summary>
-		internal static OperatingSystem _operatingSystem = Environment.OSVersion;
-
-		private static readonly ILog _logger = LogManager.GetLogger(typeof(FileTransacted));
 	}
 }

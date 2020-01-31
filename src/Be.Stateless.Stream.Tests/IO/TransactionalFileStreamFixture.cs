@@ -26,16 +26,16 @@ using Xunit;
 namespace Be.Stateless.IO
 {
 	// ensure tests run sequentially to avoid side-effects between them, see https://stackoverflow.com/questions/1408175/execute-unit-tests-serially-rather-than-in-parallel
-	[Collection("FileTransacted")]
-	public class FileStreamTransactedFixture
+	[Collection("TransactionalFile")]
+	public class TransactionalFileStreamFixture
 	{
-		public FileStreamTransactedFixture()
+		public TransactionalFileStreamFixture()
 		{
 			_buffer = Encoding.Unicode.GetBytes("foobar");
 			_filename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".txt");
 		}
 
-		~FileStreamTransactedFixture()
+		~TransactionalFileStreamFixture()
 		{
 			File.Delete(_filename);
 		}
@@ -43,11 +43,11 @@ namespace Be.Stateless.IO
 		[Fact]
 		public void TransactionCommitHasToBeExplicit()
 		{
-			using (var file = FileTransacted.Create(_filename))
+			using (var file = TransactionalFile.Create(_filename))
 			{
-				file.Should().BeOfType<FileStreamTransacted>();
+				file.Should().BeOfType<TransactionalFileStream>();
 				file.Write(_buffer, 0, _buffer.Length);
-				((FileStreamTransacted) file).Commit();
+				((TransactionalFileStream) file).Commit();
 			}
 			File.Exists(_filename).Should().BeTrue("Transaction should have been committed: file is not found.");
 		}
@@ -55,11 +55,11 @@ namespace Be.Stateless.IO
 		[Fact]
 		public void TransactionRollbackCanBeExplicit()
 		{
-			using (var file = FileTransacted.Create(_filename))
+			using (var file = TransactionalFile.Create(_filename))
 			{
-				file.Should().BeOfType<FileStreamTransacted>();
+				file.Should().BeOfType<TransactionalFileStream>();
 				file.Write(_buffer, 0, _buffer.Length);
-				((FileStreamTransacted) file).Rollback();
+				((TransactionalFileStream) file).Rollback();
 			}
 			File.Exists(_filename).Should().BeFalse("Transaction should have been rolled back: file is found.");
 		}
@@ -67,9 +67,9 @@ namespace Be.Stateless.IO
 		[Fact]
 		public void TransactionRollbackOnClose()
 		{
-			using (var file = FileTransacted.Create(_filename))
+			using (var file = TransactionalFile.Create(_filename))
 			{
-				file.Should().BeOfType<FileStreamTransacted>();
+				file.Should().BeOfType<TransactionalFileStream>();
 				file.Write(_buffer, 0, _buffer.Length);
 				file.Close();
 			}
@@ -79,9 +79,9 @@ namespace Be.Stateless.IO
 		[Fact]
 		public void TransactionRollbackOnDispose()
 		{
-			using (var file = FileTransacted.Create(_filename))
+			using (var file = TransactionalFile.Create(_filename))
 			{
-				file.Should().BeOfType<FileStreamTransacted>();
+				file.Should().BeOfType<TransactionalFileStream>();
 				file.Write(_buffer, 0, _buffer.Length);
 			}
 			File.Exists(_filename).Should().BeFalse("Transaction should have been rolled back: file is found.");
@@ -91,8 +91,8 @@ namespace Be.Stateless.IO
 		[SuppressMessage("ReSharper", "RedundantAssignment")]
 		public void TransactionRollbackOnFinalize()
 		{
-			var file = FileTransacted.Create(_filename);
-			file.Should().BeOfType<FileStreamTransacted>();
+			var file = TransactionalFile.Create(_filename);
+			file.Should().BeOfType<TransactionalFileStream>();
 			file.Write(_buffer, 0, _buffer.Length);
 			file = null;
 			GC.Collect();

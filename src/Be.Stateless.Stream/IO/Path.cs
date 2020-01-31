@@ -22,16 +22,19 @@ namespace Be.Stateless.IO
 {
 	public static class Path
 	{
-		public static bool IsNetworkPath(string path)
+		#region Nested Type: NativeMethods
+
+		private static class NativeMethods
 		{
-			return PathIsNetworkPath(path);
+			[DllImport("shlwapi.dll", CharSet = CharSet.Unicode)]
+			internal static extern bool PathIsNetworkPath(string pszPath);
 		}
 
-		#region External Imports
-
-		[DllImport("shlwapi.dll")]
-		private static extern bool PathIsNetworkPath(string pszPath);
-
 		#endregion
+
+		public static bool IsNetworkPath(string path)
+		{
+			return NativeMethods.PathIsNetworkPath(path);
+		}
 	}
 }

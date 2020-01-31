@@ -78,8 +78,7 @@ namespace Be.Stateless.IO
 		/// </returns>
 		public byte[] Append(byte[] bytes)
 		{
-			if (bytes == null || bytes.Length == 0 || _availability == 0)
-				return bytes;
+			if (bytes == null || bytes.Length == 0 || _availability == 0) return bytes;
 			var count = Math.Min(_availability, bytes.Length);
 			Buffer.BlockCopy(bytes, 0, _buffer, _offset, count);
 			_availability -= count;
@@ -116,19 +115,15 @@ namespace Be.Stateless.IO
 		/// The sum of <paramref name="offset"/> and <paramref name="count"/> is greater than the <paramref name="bytes"/>' array
 		/// length.
 		/// </exception>
+		[SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
 		public byte[] Append(byte[] bytes, int offset, int count)
 		{
-			if (bytes == null)
-				throw new ArgumentNullException(nameof(bytes));
-			if (offset < 0)
-				throw new ArgumentOutOfRangeException(nameof(offset), "Cannot be negative.");
-			if (count < 0)
-				throw new ArgumentOutOfRangeException(nameof(count), "Cannot be negative.");
-			if (offset + count > bytes.Length)
-				throw new ArgumentException("The sum of offset and count is greater than the byte array length.");
+			if (bytes == null) throw new ArgumentNullException(nameof(bytes));
+			if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "Cannot be negative.");
+			if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "Cannot be negative.");
+			if (offset + count > bytes.Length) throw new ArgumentException("The sum of offset and count is greater than the byte array length.");
 
-			if (bytes.Length == 0 || count == 0)
-				return null;
+			if (bytes.Length == 0 || count == 0) return null;
 
 			var actualCount = Math.Min(_availability, count);
 
@@ -158,8 +153,7 @@ namespace Be.Stateless.IO
 		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Any does not really enumerate.")]
 		public IEnumerable<byte[]> Append(IEnumerable<byte[]> buffers)
 		{
-			if (buffers == null)
-				throw new ArgumentNullException(nameof(buffers));
+			if (buffers == null) throw new ArgumentNullException(nameof(buffers));
 
 			while (_availability > 0 && buffers.Any())
 			{
@@ -186,10 +180,10 @@ namespace Be.Stateless.IO
 		/// <returns>
 		/// The array of bytes that could not be appended to the underlying controlled buffer because of availability shortage.
 		/// </returns>
+		[SuppressMessage("Naming", "CA1720:Identifier contains type name")]
 		public byte[] Append(string @string, Encoding encoding)
 		{
-			if (encoding == null)
-				throw new ArgumentNullException(nameof(encoding));
+			if (encoding == null) throw new ArgumentNullException(nameof(encoding));
 			return @string.IsNullOrEmpty()
 				? null
 				: Append(encoding.GetBytes(@string));
@@ -207,8 +201,8 @@ namespace Be.Stateless.IO
 		/// </returns>
 		public int Append(Func<byte[], int, int, int> @delegate)
 		{
-			if (_availability <= 0)
-				throw new InvalidOperationException($"{typeof(BufferController).Name} has no more availability to append further bytes to buffer.");
+			if (@delegate == null) throw new ArgumentNullException(nameof(@delegate));
+			if (_availability <= 0) throw new InvalidOperationException($"{typeof(BufferController).Name} has no more availability to append further bytes to buffer.");
 			var count = @delegate(_buffer, _offset, _availability);
 			_availability -= count;
 			_count += count;

@@ -24,6 +24,7 @@ namespace Be.Stateless.Extensions
 	{
 		public static bool SupportTransactionalFileSystem(this OperatingSystem system)
 		{
+			if (system == null) throw new ArgumentNullException(nameof(system));
 			// TODO rewrite as GetVolumeInformation, see http://msdn.microsoft.com/en-us/library/windows/desktop/aa364993(v=vs.85).aspx
 			// If the volume supports file system transactions, the function returns FILE_SUPPORTS_TRANSACTIONS in lpFileSystemFlags
 			// Transactional NTFS (TxF) is supported starting with Vista

@@ -46,7 +46,7 @@ namespace Be.Stateless.IO
 			using (var scope = new TransactionScope())
 			{
 				var kernelTransaction = (IKernelTransaction) TransactionInterop.GetDtcTransaction(Transaction.Current);
-				using (var file = FileTransacted.Create(_filename, 1024, kernelTransaction))
+				using (var file = TransactionalFile.Create(_filename, 1024, kernelTransaction))
 				{
 					file.Should().BeOfType<FileStream>();
 					file.Write(_buffer, 0, _buffer.Length);
@@ -65,7 +65,7 @@ namespace Be.Stateless.IO
 			using (new TransactionScope())
 			{
 				var kernelTransaction = (IKernelTransaction) TransactionInterop.GetDtcTransaction(Transaction.Current);
-				using (var file = FileTransacted.Create(_filename, 1024, kernelTransaction))
+				using (var file = TransactionalFile.Create(_filename, 1024, kernelTransaction))
 				{
 					file.Should().BeOfType<FileStream>();
 					file.Write(_buffer, 0, _buffer.Length);

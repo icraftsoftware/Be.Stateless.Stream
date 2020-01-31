@@ -25,8 +25,29 @@ using Be.Stateless.Extensions;
 
 namespace Be.Stateless.IO.Extensions
 {
+	[SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
 	public static class StreamExtensions
 	{
+		#region Nested Type: NativeMethods
+
+		private static class NativeMethods
+		{
+			[DllImport("urlmon.dll", CharSet = CharSet.Auto)]
+			[SuppressMessage("ReSharper", "InconsistentNaming")]
+			[SuppressMessage("ReSharper", "StringLiteralTypo")]
+			internal static extern int FindMimeFromData(
+				IntPtr pBC,
+				[MarshalAs(UnmanagedType.LPWStr)] string pwzUrl,
+				[MarshalAs(UnmanagedType.LPArray)] byte[] pBuffer,
+				int cbSize,
+				[MarshalAs(UnmanagedType.LPWStr)] string pwzMimeProposed,
+				int dwMimeFlags,
+				[MarshalAs(UnmanagedType.LPWStr)] out string ppwzMimeOut,
+				int dwReserved);
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Compress a stream and returns its compressed content as a base64 encoding.
 		/// </summary>
@@ -87,6 +108,7 @@ namespace Be.Stateless.IO.Extensions
 		/// The target <paramref name="folder"/> is created if it does not exist.
 		/// </para>
 		/// </remarks>
+		[SuppressMessage("Globalization", "CA1305:Specify IFormatProvider")]
 		public static void DropToFolder(this Stream stream, string folder, string name)
 		{
 			if (stream == null) throw new ArgumentNullException(nameof(stream));
@@ -122,10 +144,11 @@ namespace Be.Stateless.IO.Extensions
 		/// <seealso href="http://forums.asp.net/t/1041821.aspx/1?Determine+Mime+Type+for+server+side+file"/>
 		public static string GetMimeType(this Stream stream)
 		{
+			if (stream == null) throw new ArgumentNullException(nameof(stream));
 			var count = 256;
 			var buffer = new byte[count];
 			count = stream.Read(buffer, 0, count);
-			var hresult = FindMimeFromData(IntPtr.Zero, null, buffer, count, null, 0, out var mimeType, 0);
+			var hresult = NativeMethods.FindMimeFromData(IntPtr.Zero, null, buffer, count, null, 0, out var mimeType, 0);
 			if (hresult != 0) throw Marshal.GetExceptionForHR(hresult);
 			if (stream.CanSeek) stream.Position = 0L;
 			return mimeType;
@@ -139,8 +162,10 @@ namespace Be.Stateless.IO.Extensions
 		/// <remarks>
 		/// The <paramref name="stream"/> will be rewinded before being read.
 		/// </remarks>
+		[SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope")]
 		public static string ReadToEnd(this Stream stream)
 		{
+			if (stream == null) throw new ArgumentNullException(nameof(stream));
 			return new StreamReader(stream.Rewind()).ReadToEnd();
 		}
 
@@ -152,6 +177,7 @@ namespace Be.Stateless.IO.Extensions
 		/// <exception cref="InvalidOperationException">If the <paramref name="stream"/> is not seekable, i.e. <see cref="Stream.CanSeek"/> is <c>false</c>.</exception>
 		public static Stream Rewind(this Stream stream)
 		{
+			if (stream == null) throw new ArgumentNullException(nameof(stream));
 			if (!stream.CanSeek) throw new InvalidOperationException("Stream cannot be rewinded.");
 			stream.Position = 0;
 			return stream;
@@ -165,6 +191,7 @@ namespace Be.Stateless.IO.Extensions
 		/// <remarks>Useful for debugging.</remarks>
 		public static void Save(this Stream stream, string path)
 		{
+			if (stream == null) throw new ArgumentNullException(nameof(stream));
 			using (Stream file = File.OpenWrite(path))
 			{
 				stream.CopyTo(file);
@@ -181,9 +208,11 @@ namespace Be.Stateless.IO.Extensions
 			if (stream == null) throw new ArgumentNullException(nameof(stream));
 			if (!stream.CanRead) throw new InvalidOperationException("Cannot compress a non-readable stream.");
 
-			var destinationStream = new MemoryStream();
-			stream.CopyTo(destinationStream);
-			return Convert.ToBase64String(destinationStream.GetBuffer(), 0, (int) destinationStream.Position);
+			using (var destinationStream = new MemoryStream())
+			{
+				stream.CopyTo(destinationStream);
+				return Convert.ToBase64String(destinationStream.GetBuffer(), 0, (int) destinationStream.Position);
+			}
 		}
 
 		/// <summary>
@@ -206,6 +235,7 @@ namespace Be.Stateless.IO.Extensions
 		/// </returns>
 		public static bool TryCompressToBase64String(this Stream stream, int threshold, out string compressedBase64String)
 		{
+			if (stream == null) throw new ArgumentNullException(nameof(stream));
 			// 16KB compressed, should be OK for most streams having a threshold limit on compressed size
 			const int bufferSize = 16 * 1024;
 			var compressedStream = new MemoryStream(bufferSize);
@@ -234,26 +264,8 @@ namespace Be.Stateless.IO.Extensions
 				compressedBase64String = Convert.ToBase64String(compressedStream.GetBuffer(), 0, (int) compressedStream.Length);
 				return true;
 			}
-
 			compressedBase64String = null;
 			return false;
 		}
-
-		#region External Imports
-
-		[DllImport("urlmon.dll", CharSet = CharSet.Auto)]
-		[SuppressMessage("ReSharper", "InconsistentNaming")]
-		[SuppressMessage("ReSharper", "StringLiteralTypo")]
-		private static extern int FindMimeFromData(
-			IntPtr pBC,
-			[MarshalAs(UnmanagedType.LPWStr)] string pwzUrl,
-			[MarshalAs(UnmanagedType.LPArray)] byte[] pBuffer,
-			int cbSize,
-			[MarshalAs(UnmanagedType.LPWStr)] string pwzMimeProposed,
-			int dwMimeFlags,
-			[MarshalAs(UnmanagedType.LPWStr)] out string ppwzMimeOut,
-			int dwReserved);
-
-		#endregion
 	}
 }

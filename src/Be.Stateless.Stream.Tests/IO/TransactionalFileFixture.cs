@@ -30,28 +30,28 @@ using System.Transactions;
 namespace Be.Stateless.IO
 {
 	// ensure tests run sequentially to avoid side-effects between them, see https://stackoverflow.com/questions/1408175/execute-unit-tests-serially-rather-than-in-parallel
-	[Collection("FileTransacted")]
-	public class FileTransactedFixture
+	[Collection("TransactionalFile")]
+	public class TransactionalFileFixture
 	{
-		public FileTransactedFixture()
+		public TransactionalFileFixture()
 		{
 			_filename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".txt");
 		}
 
-		~FileTransactedFixture()
+		~TransactionalFileFixture()
 		{
 			File.Delete(_filename);
 			File.Delete(_filename + ".moved");
-			FileTransacted._operatingSystem = Environment.OSVersion;
+			TransactionalFile._operatingSystem = Environment.OSVersion;
 		}
 
 		[Fact]
 		public void CreateFileStreamTransactedWhenTransactionalFileSystemSupported()
 		{
-			FileTransacted._operatingSystem = OperatingSystemExtensionsFixture.Windows7;
-			using (var file = FileTransacted.Create(_filename))
+			TransactionalFile._operatingSystem = OperatingSystemExtensionsFixture.Windows7;
+			using (var file = TransactionalFile.Create(_filename))
 			{
-				file.Should().BeOfType<FileStreamTransacted>();
+				file.Should().BeOfType<TransactionalFileStream>();
 			}
 		}
 
@@ -60,13 +60,13 @@ namespace Be.Stateless.IO
 		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 		public void CreateFileStreamWhenGivenAmbientTransactionAndTransactionalFileSystemSupported()
 		{
-			FileTransacted._operatingSystem = OperatingSystemExtensionsFixture.Windows7;
+			TransactionalFile._operatingSystem = OperatingSystemExtensionsFixture.Windows7;
 			using (new TransactionScope())
 			{
 				// grab kernel level transaction handle
 				var dtcTransaction = TransactionInterop.GetDtcTransaction(Transaction.Current);
 				var kernelTransaction = (IKernelTransaction) dtcTransaction;
-				var file = FileTransacted.Create(_filename, 1024, kernelTransaction);
+				var file = TransactionalFile.Create(_filename, 1024, kernelTransaction);
 				file.Should().BeOfType<FileStream>();
 			}
 		}
@@ -76,8 +76,8 @@ namespace Be.Stateless.IO
 		public void CreateFileStreamWhenNetworkPath()
 		{
 			var uncFilename = @"\\localhost\" + _filename.Replace(':', '$');
-			FileTransacted._operatingSystem = OperatingSystemExtensionsFixture.Windows7;
-			using (var file = FileTransacted.Create(uncFilename))
+			TransactionalFile._operatingSystem = OperatingSystemExtensionsFixture.Windows7;
+			using (var file = TransactionalFile.Create(uncFilename))
 			{
 				file.Should().BeOfType<FileStream>();
 			}
@@ -86,8 +86,8 @@ namespace Be.Stateless.IO
 		[Fact]
 		public void CreateFileStreamWhenTransactionalFileSystemUnsupported()
 		{
-			FileTransacted._operatingSystem = OperatingSystemExtensionsFixture.WindowsXP;
-			using (var file = FileTransacted.Create(_filename))
+			TransactionalFile._operatingSystem = OperatingSystemExtensionsFixture.WindowsXP;
+			using (var file = TransactionalFile.Create(_filename))
 			{
 				file.Should().BeOfType<FileStream>();
 			}
@@ -106,12 +106,12 @@ namespace Be.Stateless.IO
 			File.Exists(_filename).Should().BeTrue();
 			File.Exists(_filename + ".moved").Should().BeFalse();
 
-			FileTransacted._operatingSystem = OperatingSystemExtensionsFixture.Windows7;
+			TransactionalFile._operatingSystem = OperatingSystemExtensionsFixture.Windows7;
 			using (var scope = new TransactionScope())
 			{
 				var dtcTransaction = TransactionInterop.GetDtcTransaction(Transaction.Current);
 				var kernelTransaction = (IKernelTransaction) dtcTransaction;
-				FileTransacted.Move(_filename, _filename + ".moved", kernelTransaction);
+				TransactionalFile.Move(_filename, _filename + ".moved", kernelTransaction);
 				// this is the root scope and it has to cast a vote
 				scope.Complete();
 			}
@@ -133,13 +133,13 @@ namespace Be.Stateless.IO
 			File.Exists(_filename).Should().BeTrue();
 			File.Exists(_filename + ".moved").Should().BeFalse();
 
-			FileTransacted._operatingSystem = OperatingSystemExtensionsFixture.Windows7;
+			TransactionalFile._operatingSystem = OperatingSystemExtensionsFixture.Windows7;
 			using (new TransactionScope())
 			{
 				var dtcTransaction = TransactionInterop.GetDtcTransaction(Transaction.Current);
 				// ReSharper disable once SuspiciousTypeConversion.Global
 				var kernelTransaction = (IKernelTransaction) dtcTransaction;
-				FileTransacted.Move(_filename, _filename + ".moved", kernelTransaction);
+				TransactionalFile.Move(_filename, _filename + ".moved", kernelTransaction);
 				// this is the root scope and failing to cast a vote will abort the ambient transaction
 			}
 

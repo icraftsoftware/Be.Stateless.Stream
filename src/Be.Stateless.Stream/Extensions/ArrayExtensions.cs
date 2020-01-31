@@ -51,7 +51,7 @@ namespace Be.Stateless.Extensions
 				.Select(p => p.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries))
 				.Aggregate(
 					(accumulatedCommonSegments, pathSegments) => accumulatedCommonSegments
-						.TakeWhile((segment, i) => i < pathSegments.Length && pathSegments[i].Equals(segment))
+						.TakeWhile((segment, i) => i < pathSegments.Length && pathSegments[i].Equals(segment, StringComparison.OrdinalIgnoreCase))
 						.ToArray()
 				);
 			// https://stackoverflow.com/questions/14897121/using-enumerable-aggregate-method-over-an-empty-sequence

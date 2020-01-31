@@ -19,9 +19,9 @@
 namespace Be.Stateless.IO
 {
 	/// <summary>
-	/// Represents a transaction to be performed at a transactional stream, like <see cref="FileStreamTransacted"/>.
+	/// Represents a transaction to be performed at a transactional stream, like <see cref="TransactionalFileStream"/>.
 	/// </summary>
-	public interface IStreamTransacted
+	public interface ITransactionalStream
 	{
 		/// <summary>
 		/// Commits the stream transaction.

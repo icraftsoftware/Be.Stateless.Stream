@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using Be.Stateless.Extensions;
@@ -41,6 +42,7 @@ namespace Be.Stateless.IO
 		/// The <see cref="string"/> to wrap.
 		/// </param>
 		/// <seealso href="http://msdn.microsoft.com/en-us/magazine/cc163768.aspx" />
+		[SuppressMessage("Naming", "CA1720:Identifier contains type name")]
 		public StringStream(string @string)
 		{
 			if (@string.IsNullOrEmpty()) throw new ArgumentNullException(nameof(@string));
@@ -69,10 +71,10 @@ namespace Be.Stateless.IO
 		/// <returns>
 		/// A long value representing the length of the stream in bytes.
 		/// </returns>
-		/// <exception cref="T:System.NotSupportedException">
+		/// <exception cref="NotSupportedException">
 		/// A class derived from Stream does not support seeking.
 		/// </exception>
-		/// <exception cref="T:System.ObjectDisposedException">
+		/// <exception cref="ObjectDisposedException">
 		/// Methods were called after the stream was closed.
 		/// </exception>
 		/// <remarks>
@@ -93,57 +95,60 @@ namespace Be.Stateless.IO
 		}
 
 		/// <summary>
-		/// When overridden in a derived class, reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
+		/// When overridden in a derived class, reads a sequence of bytes from the current stream and advances the position within
+		/// the stream by the number of bytes read.
 		/// </summary>
 		/// <returns>
-		/// The total number of bytes read into the buffer. This can be less than the number of bytes requested if that many bytes are not currently available, or zero (0)
-		/// if the end of the stream has been reached.
+		/// The total number of bytes read into the buffer. This can be less than the number of bytes requested if that many bytes
+		/// are not currently available, or zero (0) if the end of the stream has been reached.
 		/// </returns>
 		/// <param name="buffer">
-		/// An array of bytes. When this method returns, the buffer contains the specified byte array with the values between <paramref name="offset"/> and (<paramref
-		/// name="offset"/> + <paramref name="count"/> - 1) replaced by the bytes read from the current source.
+		/// An array of bytes. When this method returns, the buffer contains the specified byte array with the values between
+		/// <paramref name="offset"/> and (<paramref name="offset"/> + <paramref name="count"/> - 1) replaced by the bytes read
+		/// from the current source.
 		/// </param>
 		/// <param name="offset">
-		/// The zero-based byte offset in <paramref name="buffer"/> at which to begin storing the data read from the current stream.
+		/// The zero-based byte offset in <paramref name="buffer"/> at which to begin storing the data read from the current
+		/// stream.
 		/// </param>
 		/// <param name="count">
 		/// The maximum number of bytes to be read from the current stream.
 		/// </param>
-		/// <exception cref="T:System.ArgumentException">
+		/// <exception cref="ArgumentException">
 		/// The sum of <paramref name="offset"/> and <paramref name="count"/> is larger than the buffer length.
 		/// </exception>
-		/// <exception cref="T:System.ArgumentNullException">
+		/// <exception cref="ArgumentNullException">
 		/// <paramref name="buffer"/> is null.
 		/// </exception>
-		/// <exception cref="T:System.ArgumentOutOfRangeException">
+		/// <exception cref="ArgumentOutOfRangeException">
 		/// <paramref name="offset"/> or <paramref name="count"/> is negative.
 		/// </exception>
-		/// <exception cref="T:System.IO.IOException">
+		/// <exception cref="IOException">
 		/// An I/O error occurs.
 		/// </exception>
-		/// <exception cref="T:System.NotSupportedException">
+		/// <exception cref="NotSupportedException">
 		/// The stream does not support reading.
 		/// </exception>
-		/// <exception cref="T:System.ObjectDisposedException">
+		/// <exception cref="ObjectDisposedException">
 		/// Methods were called after the stream was closed.
 		/// </exception>
 		/// <remarks>
-		/// The loop consists of picking up the next character from the string and extracting from it the appropriate byte by using some simple bit manipulation. <see
-		/// cref="BitConverter.GetBytes(char)"/> could have been used but that would result in a 2-byte array being allocated each time the bytes for a character are
-		/// retrieved, and since the whole point of this class is to avoid extraneous allocations for large strings, that would have been a bit counterproductive.
+		/// The loop consists of picking up the next character from the string and extracting from it the appropriate byte by
+		/// using some simple bit manipulation. <see cref="BitConverter.GetBytes(char)"/> could have been used but that would
+		/// result in a 2-byte array being allocated each time the bytes for a character are retrieved, and since the whole point
+		/// of this class is to avoid extraneous allocations for large strings, that would have been a bit counterproductive.
 		/// </remarks>
 		/// <seealso href="http://msdn.microsoft.com/en-us/magazine/cc163768.aspx" />
 		public override int Read(byte[] buffer, int offset, int count)
 		{
+			if (buffer == null) throw new ArgumentNullException(nameof(buffer));
 			var bytesRead = 0;
-
 			while (bytesRead < count && _position < _unicodeBom.Length)
 			{
 				buffer[offset + bytesRead] = _unicodeBom[bytesRead];
 				_position++;
 				bytesRead++;
 			}
-
 			while (bytesRead < count && _position < _byteLength)
 			{
 				var c = _string[(_position - 2) / 2];
@@ -153,7 +158,6 @@ namespace Be.Stateless.IO
 				_position++;
 				bytesRead++;
 			}
-
 			return bytesRead;
 		}
 
