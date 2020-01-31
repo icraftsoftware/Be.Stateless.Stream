@@ -171,7 +171,6 @@ namespace Be.Stateless.IO
 					Position = Position + offset;
 					break;
 			}
-
 			return Position;
 		}
 

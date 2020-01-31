@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using Be.Stateless.Extensions;
@@ -260,7 +259,6 @@ namespace Be.Stateless.IO
 		/// <summary>
 		/// <c>internal</c> for the sake of unit testing only.
 		/// </summary>
-		[SuppressMessage("ReSharper", "InconsistentNaming")]
 		internal static OperatingSystem _operatingSystem = Environment.OSVersion;
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(FileTransacted));

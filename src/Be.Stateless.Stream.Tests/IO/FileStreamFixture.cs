@@ -51,7 +51,6 @@ namespace Be.Stateless.IO
 					file.Should().BeOfType<FileStream>();
 					file.Write(_buffer, 0, _buffer.Length);
 				}
-
 				// this is the root scope and it has to cast a vote
 				scope.Complete();
 			}
@@ -71,7 +70,6 @@ namespace Be.Stateless.IO
 					file.Should().BeOfType<FileStream>();
 					file.Write(_buffer, 0, _buffer.Length);
 				}
-
 				// this is the root scope and failing to cast a vote will abort the ambient transaction
 			}
 

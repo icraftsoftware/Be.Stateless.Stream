@@ -17,12 +17,15 @@
 #endregion
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Transactions;
 using Be.Stateless.Extensions;
 using FluentAssertions;
 using Xunit;
+
+#if NETFRAMEWORK
+using System.Diagnostics.CodeAnalysis;
+using System.Transactions;
+#endif
 
 namespace Be.Stateless.IO
 {

@@ -41,7 +41,6 @@ namespace Be.Stateless.IO.Extensions
 			{
 				stream.CopyTo(compressionStream);
 			}
-
 			return Convert.ToBase64String(destinationStream.GetBuffer(), 0, (int) destinationStream.Position);
 		}
 

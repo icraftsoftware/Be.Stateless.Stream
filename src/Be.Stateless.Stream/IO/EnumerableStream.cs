@@ -89,7 +89,6 @@ namespace Be.Stateless.IO
 			{
 				_backlog = bufferController.Append(_enumerator.Current);
 			}
-
 			_position += bufferController.Count;
 			return bufferController.Count;
 		}

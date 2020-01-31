@@ -49,7 +49,6 @@ namespace Be.Stateless.IO
 				file.Write(_buffer, 0, _buffer.Length);
 				((FileStreamTransacted) file).Commit();
 			}
-
 			File.Exists(_filename).Should().BeTrue("Transaction should have been committed: file is not found.");
 		}
 
@@ -62,7 +61,6 @@ namespace Be.Stateless.IO
 				file.Write(_buffer, 0, _buffer.Length);
 				((FileStreamTransacted) file).Rollback();
 			}
-
 			File.Exists(_filename).Should().BeFalse("Transaction should have been rolled back: file is found.");
 		}
 
@@ -75,7 +73,6 @@ namespace Be.Stateless.IO
 				file.Write(_buffer, 0, _buffer.Length);
 				file.Close();
 			}
-
 			File.Exists(_filename).Should().BeFalse("Transaction should have been rolled back: file is found.");
 		}
 
@@ -87,7 +84,6 @@ namespace Be.Stateless.IO
 				file.Should().BeOfType<FileStreamTransacted>();
 				file.Write(_buffer, 0, _buffer.Length);
 			}
-
 			File.Exists(_filename).Should().BeFalse("Transaction should have been rolled back: file is found.");
 		}
 
