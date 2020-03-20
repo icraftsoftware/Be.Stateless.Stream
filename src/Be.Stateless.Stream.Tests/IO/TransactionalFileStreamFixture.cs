@@ -29,17 +29,6 @@ namespace Be.Stateless.IO
 	[Collection("TransactionalFile")]
 	public class TransactionalFileStreamFixture
 	{
-		public TransactionalFileStreamFixture()
-		{
-			_buffer = Encoding.Unicode.GetBytes("foobar");
-			_filename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".txt");
-		}
-
-		~TransactionalFileStreamFixture()
-		{
-			File.Delete(_filename);
-		}
-
 		[Fact]
 		public void TransactionCommitHasToBeExplicit()
 		{
@@ -98,6 +87,17 @@ namespace Be.Stateless.IO
 			GC.Collect();
 			GC.WaitForPendingFinalizers();
 			File.Exists(_filename).Should().BeFalse("Transaction should have been rolled back: file is found.");
+		}
+
+		public TransactionalFileStreamFixture()
+		{
+			_buffer = Encoding.Unicode.GetBytes("foobar");
+			_filename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".txt");
+		}
+
+		~TransactionalFileStreamFixture()
+		{
+			File.Delete(_filename);
 		}
 
 		private readonly byte[] _buffer;

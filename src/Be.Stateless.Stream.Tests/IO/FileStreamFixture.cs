@@ -29,16 +29,6 @@ namespace Be.Stateless.IO
 {
 	public class FileStreamFixture
 	{
-		private static string GetTempFileName()
-		{
-			return System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".txt");
-		}
-
-		~FileStreamFixture()
-		{
-			File.Delete(_filename);
-		}
-
 		[Fact]
 		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 		public void TransactionCommitWithAmbientTransaction()
@@ -76,8 +66,19 @@ namespace Be.Stateless.IO
 			File.Exists(_filename).Should().BeFalse();
 		}
 
-		private static readonly string _filename = GetTempFileName();
+		private static string GetTempFileName()
+		{
+			return System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".txt");
+		}
+
+		~FileStreamFixture()
+		{
+			File.Delete(_filename);
+		}
+
 		private readonly byte[] _buffer = Encoding.Unicode.GetBytes("foobar");
+
+		private static readonly string _filename = GetTempFileName();
 	}
 }
 #endif

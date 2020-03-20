@@ -33,18 +33,6 @@ namespace Be.Stateless.IO
 	[Collection("TransactionalFile")]
 	public class TransactionalFileFixture
 	{
-		public TransactionalFileFixture()
-		{
-			_filename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".txt");
-		}
-
-		~TransactionalFileFixture()
-		{
-			File.Delete(_filename);
-			File.Delete(_filename + ".moved");
-			TransactionalFile._operatingSystem = Environment.OSVersion;
-		}
-
 		[Fact]
 		public void CreateFileStreamTransactedWhenTransactionalFileSystemSupported()
 		{
@@ -147,6 +135,17 @@ namespace Be.Stateless.IO
 			File.Exists(_filename + ".moved").Should().BeFalse();
 		}
 #endif
+		public TransactionalFileFixture()
+		{
+			_filename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".txt");
+		}
+
+		~TransactionalFileFixture()
+		{
+			File.Delete(_filename);
+			File.Delete(_filename + ".moved");
+			TransactionalFile._operatingSystem = Environment.OSVersion;
+		}
 
 		private readonly string _filename;
 	}
