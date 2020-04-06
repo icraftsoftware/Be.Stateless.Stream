@@ -115,7 +115,6 @@ namespace Be.Stateless.IO
 		/// The sum of <paramref name="offset"/> and <paramref name="count"/> is greater than the <paramref name="bytes"/>' array
 		/// length.
 		/// </exception>
-		[SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
 		public byte[] Append(byte[] bytes, int offset, int count)
 		{
 			if (bytes == null) throw new ArgumentNullException(nameof(bytes));

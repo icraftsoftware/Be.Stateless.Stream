@@ -41,7 +41,6 @@ namespace Be.Stateless.IO
 	/// <see href="https://transactionalfilemgr.codeplex.com/">.NET Transactional File Manager</see>.
 	/// </para>
 	/// </remarks>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
 	public static class TransactionalFile
 	{
 		#region Nested Type: NativeMethods

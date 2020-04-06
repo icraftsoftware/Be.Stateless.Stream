@@ -25,7 +25,6 @@ using Be.Stateless.Extensions;
 
 namespace Be.Stateless.IO.Extensions
 {
-	[SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
 	public static class StreamExtensions
 	{
 		#region Nested Type: NativeMethods
