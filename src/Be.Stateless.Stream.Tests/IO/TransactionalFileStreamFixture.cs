@@ -27,7 +27,8 @@ namespace Be.Stateless.IO
 {
 	// ensure tests run sequentially to avoid side-effects between them, see https://stackoverflow.com/questions/1408175/execute-unit-tests-serially-rather-than-in-parallel
 	[Collection("TransactionalFile")]
-	public class TransactionalFileStreamFixture
+	[SuppressMessage("Design", "CA1063:Implement IDisposable Correctly")]
+	public class TransactionalFileStreamFixture : IDisposable
 	{
 		[Fact]
 		public void TransactionCommitHasToBeExplicit()
@@ -95,7 +96,7 @@ namespace Be.Stateless.IO
 			_filename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".txt");
 		}
 
-		~TransactionalFileStreamFixture()
+		public void Dispose()
 		{
 			File.Delete(_filename);
 		}

@@ -17,6 +17,7 @@
 #endregion
 
 #if NETFRAMEWORK
+
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -27,7 +28,8 @@ using Xunit;
 
 namespace Be.Stateless.IO
 {
-	public class FileStreamFixture
+	[SuppressMessage("Design", "CA1063:Implement IDisposable Correctly")]
+	public class FileStreamFixture : IDisposable
 	{
 		[Fact]
 		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
@@ -71,7 +73,7 @@ namespace Be.Stateless.IO
 			return System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".txt");
 		}
 
-		~FileStreamFixture()
+		public void Dispose()
 		{
 			File.Delete(_filename);
 		}
@@ -81,4 +83,5 @@ namespace Be.Stateless.IO
 		private static readonly string _filename = GetTempFileName();
 	}
 }
+
 #endif

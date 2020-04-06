@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace Be.Stateless.IO
@@ -27,6 +28,7 @@ namespace Be.Stateless.IO
 		private static class NativeMethods
 		{
 			[DllImport("shlwapi.dll", CharSet = CharSet.Unicode)]
+			[SuppressMessage("ReSharper", "StringLiteralTypo")]
 			internal static extern bool PathIsNetworkPath(string pszPath);
 		}
 

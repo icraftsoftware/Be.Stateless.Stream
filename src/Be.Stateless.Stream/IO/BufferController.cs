@@ -118,8 +118,8 @@ namespace Be.Stateless.IO
 		public byte[] Append(byte[] bytes, int offset, int count)
 		{
 			if (bytes == null) throw new ArgumentNullException(nameof(bytes));
-			if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "Cannot be negative.");
-			if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "Cannot be negative.");
+			if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "Offset cannot be negative.");
+			if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "Count cannot be negative.");
 			if (offset + count > bytes.Length) throw new ArgumentException("The sum of offset and count is greater than the byte array length.");
 
 			if (bytes.Length == 0 || count == 0) return null;

@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using Be.Stateless.Extensions;
@@ -181,7 +182,7 @@ namespace Be.Stateless.IO
 		/// A <see cref="FileStream"/> with the specified buffer size that provides write access to the file specified in
 		/// path.
 		/// </returns>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope")]
+		[SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope")]
 		private static FileStream CreateTransacted(string path, int bufferSize, IKernelTransaction transaction)
 		{
 			if (Path.IsNetworkPath(path)) throw new ArgumentException("Cannot create a transacted file in a network volume.", nameof(path));

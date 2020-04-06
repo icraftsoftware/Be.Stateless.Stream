@@ -59,13 +59,13 @@ namespace Be.Stateless.IO
 			var controller = new BufferController(new byte[3], 0, 3);
 
 			Action act = () => controller.Append(null, 0, 0);
-			act.Should().Throw<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: bytes");
+			act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "bytes");
 
 			act = () => controller.Append(new byte[0], -1, 0);
-			act.Should().Throw<ArgumentException>().WithMessage("Cannot be negative.\r\nParameter name: offset");
+			act.Should().Throw<ArgumentException>().WithMessage("Offset cannot be negative.*");
 
 			act = () => controller.Append(new byte[0], 1, -1);
-			act.Should().Throw<ArgumentException>().WithMessage("Cannot be negative.\r\nParameter name: count");
+			act.Should().Throw<ArgumentException>().WithMessage("Count cannot be negative.*");
 
 			act = () => controller.Append(new byte[0], 1, 0);
 			act.Should().Throw<ArgumentException>().WithMessage("The sum of offset and count is greater than the byte array length.");
@@ -144,7 +144,7 @@ namespace Be.Stateless.IO
 		{
 			var controller = new BufferController(new byte[3], 0, 3);
 			Action act = () => controller.Append((IEnumerable<byte[]>) null);
-			act.Should().Throw<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: buffers");
+			act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "buffers");
 		}
 
 		[Fact]
