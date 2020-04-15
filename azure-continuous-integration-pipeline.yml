@@ -1,5 +1,5 @@
 trigger:
-- master
+  - master
 
 resources:
   repositories:
@@ -9,8 +9,8 @@ resources:
       endpoint: github.com_icraftsoftware
 
 extends:
-    template: Templates/continuous-integration.yml@pipelineTemplateRepository
-    parameters:
-        ProjectOrSolutionPath: '$(Build.SourcesDirectory)/Be.Stateless.Stream.sln'
-        Major: 2
-        Minor: 0
+  template: Templates/continuous-integration.yml@pipelineTemplateRepository
+  parameters:
+    ProjectOrSolutionPath: "$(Build.SourcesDirectory)/Be.Stateless.Stream.sln"
+    Major: 2
+    Minor: 0
