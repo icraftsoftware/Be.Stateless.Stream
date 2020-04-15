@@ -1,5 +1,4 @@
-﻿<!-- see https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build -->
-<!--
+﻿<!--
 
   Copyright © 2012 - 2020 François Chabot
 
@@ -21,8 +20,8 @@
   <PropertyGroup>
     <DelaySign Condition=" '$(DelaySign)' == '' ">true</DelaySign>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile Condition=" '$(DelaySign)' == 'true' ">..\..\build\be.stateless.public.snk</AssemblyOriginatorKeyFile>
-    <AssemblyOriginatorKeyFile Condition=" '$(DelaySign)' == 'false' ">..\..\build\be.stateless.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile Condition=" '$(DelaySign)' == 'true'  And '$(AssemblyOriginatorKeyFile)' == '' ">..\..\build\be.stateless.public.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile Condition=" '$(DelaySign)' == 'false' And '$(AssemblyOriginatorKeyFile)' == '' ">..\..\build\be.stateless.snk</AssemblyOriginatorKeyFile>
 
     <Major Condition=" '$(Major)' == '' ">2</Major>
     <Minor Condition=" '$(Minor)' == '' ">0</Minor>
