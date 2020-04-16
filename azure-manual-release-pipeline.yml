@@ -8,7 +8,7 @@ resources:
       endpoint: github.com_icraftsoftware
 
 extends:
-  template: Templates/manual-release.yml@pipelineTemplateRepository
+  template: Pipelines/net/manual-release.yml@pipelineTemplateRepository
   parameters:
     ProjectOrSolutionPath: "$(Build.SourcesDirectory)/Be.Stateless.Stream.sln"
     Major: 2
