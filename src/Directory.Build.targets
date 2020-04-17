@@ -1,4 +1,5 @@
-﻿<!--
+﻿<!-- see https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build -->
+<!--
 
   Copyright © 2012 - 2020 François Chabot
 
@@ -16,12 +17,5 @@
 
 -->
 <Project>
-
-  <ItemGroup>
-    <PackageReference Update="BizTalk.Server.2020.Build;BizTalk.Server.2020.Runtime;BizTalk.Server.2020.Runtime.Adapters">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>build; buildtransitive; compile; native; runtime; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
+  <Import Project="$(MSBuildThisFileDirectory)../.build/Directory.Build.targets" />
 </Project>
