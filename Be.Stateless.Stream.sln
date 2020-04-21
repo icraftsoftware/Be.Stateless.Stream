@@ -7,26 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Be.Stateless.Stream", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Be.Stateless.Stream.Tests", "src\Be.Stateless.Stream.Tests\Be.Stateless.Stream.Tests.csproj", "{4C2AB288-8537-4AA5-8203-69F677011AA7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{977C69AF-95DD-490D-863B-B02DC04C86E3}"
-	ProjectSection(SolutionItems) = preProject
-		.build\be.stateless.public.snk = .build\be.stateless.public.snk
-		.build\build.ps1 = .build\build.ps1
-		.build\Directory.Build.props = .build\Directory.Build.props
-		.build\Directory.Build.targets = .build\Directory.Build.targets
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common.msbuild", "Common.msbuild", "{E45048C2-0565-4B69-8486-4C300890FEFF}"
-	ProjectSection(SolutionItems) = preProject
-		src\Directory.Build.props = src\Directory.Build.props
-		src\Directory.Build.targets = src\Directory.Build.targets
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipelines", "Pipelines", "{2121BF4C-7531-452D-9194-D9BF0D5B56C9}"
-	ProjectSection(SolutionItems) = preProject
-		azure-continuous-integration-pipeline.yml = azure-continuous-integration-pipeline.yml
-		azure-manual-release-pipeline.yml = azure-manual-release-pipeline.yml
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FB2DB540-81B8-4FA6-A37F-2DD74DE501FC}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
