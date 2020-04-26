@@ -4,7 +4,7 @@
     <TargetFrameworks>netcoreapp3.0;net48</TargetFrameworks>
     <RootNamespace>Be.Stateless</RootNamespace>
     <AssemblyTitle>Be.Stateless.Stream.Tests</AssemblyTitle>
-    <Description>Unit testing for stream class library for general .NET development.</Description>
+    <Description>Unit tests for stream class library for general .NET development.</Description>
   </PropertyGroup>
 
   <ItemGroup>
