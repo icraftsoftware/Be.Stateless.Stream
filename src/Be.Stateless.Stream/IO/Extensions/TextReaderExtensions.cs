@@ -35,15 +35,15 @@ namespace Be.Stateless.IO.Extensions
 				IgnoreProcessingInstructions = true,
 				IgnoreWhitespace = true,
 				ValidationFlags = XmlSchemaValidationFlags.None,
-				ValidationType = ValidationType.None
+				ValidationType = ValidationType.None,
+				XmlResolver = null
 			};
 			var isValid = true;
 			using (var xmlReader = XmlReader.Create(reader, settings))
 			{
 				try
 				{
-					while (xmlReader.Read())
-					{ }
+					while (xmlReader.Read()) { }
 				}
 				catch (XmlException)
 				{
