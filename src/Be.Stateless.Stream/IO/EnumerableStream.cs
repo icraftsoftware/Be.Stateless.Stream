@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -32,6 +33,7 @@ namespace Be.Stateless.IO
 	/// When <see cref="string"/>s are used as the underlying type of the <see cref="IEnumerable{T}"/>, the <see
 	/// cref="Encoding.Unicode"/> encoding is assumed to convert them to <see cref="byte"/>s.
 	/// </remarks>
+	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "Public API.")]
 	public class EnumerableStream : Stream
 	{
 		/// <summary>
@@ -42,8 +44,7 @@ namespace Be.Stateless.IO
 		/// </param>
 		public EnumerableStream(IEnumerable<byte[]> enumerable)
 		{
-			if (enumerable == null)
-				throw new ArgumentNullException(nameof(enumerable));
+			if (enumerable == null) throw new ArgumentNullException(nameof(enumerable));
 			_enumerator = enumerable.GetEnumerator();
 		}
 

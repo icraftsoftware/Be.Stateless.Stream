@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Be.Stateless.Extensions
@@ -44,6 +45,7 @@ namespace Be.Stateless.Extensions
 		/// <seealso href="https://www.rosettacode.org/wiki/Find_common_directory_path">Find common directory path</seealso>
 		/// <seealso href="https://stackoverflow.com/questions/2070356/find-common-prefix-of-strings">Find common prefix of strings</seealso>
 		/// <seealso href="https://stackoverflow.com/questions/33709165/get-common-prefix-of-two-string">Get common prefix of two string</seealso>
+		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 		public static string CommonPath(this string[] paths, string separator = "/")
 		{
 			if (paths == null || paths.Length == 0) return string.Empty;

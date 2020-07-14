@@ -25,6 +25,8 @@ using Be.Stateless.Extensions;
 
 namespace Be.Stateless.IO.Extensions
 {
+	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "Public API.")]
+	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 	public static class StreamExtensions
 	{
 		#region Nested Type: NativeMethods
@@ -34,6 +36,7 @@ namespace Be.Stateless.IO.Extensions
 			[DllImport("urlmon.dll", CharSet = CharSet.Auto)]
 			[SuppressMessage("ReSharper", "InconsistentNaming")]
 			[SuppressMessage("ReSharper", "StringLiteralTypo")]
+			[SuppressMessage("ReSharper", "IdentifierTypo")]
 			internal static extern int FindMimeFromData(
 				IntPtr pBC,
 				[MarshalAs(UnmanagedType.LPWStr)] string pwzUrl,
@@ -141,6 +144,7 @@ namespace Be.Stateless.IO.Extensions
 		/// <seealso href="http://msdn.microsoft.com/en-us/library/ms775107(v=vs.85).aspx"/>
 		/// <seealso href="Microsoft.Practices.ESB.ExceptionHandling.PipelineComponents.SafeNativeMethods.GetMimeType(Stream)"/>
 		/// <seealso href="http://forums.asp.net/t/1041821.aspx/1?Determine+Mime+Type+for+server+side+file"/>
+		[SuppressMessage("ReSharper", "IdentifierTypo")]
 		public static string GetMimeType(this Stream stream)
 		{
 			if (stream == null) throw new ArgumentNullException(nameof(stream));
@@ -174,6 +178,7 @@ namespace Be.Stateless.IO.Extensions
 		/// <param name="stream">The <see cref="Stream"/> to rewind.</param>
 		/// <returns>The <paramref name="stream"/> which has been rewinded.</returns>
 		/// <exception cref="InvalidOperationException">If the <paramref name="stream"/> is not seekable, i.e. <see cref="Stream.CanSeek"/> is <c>false</c>.</exception>
+		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Public API.")]
 		public static Stream Rewind(this Stream stream)
 		{
 			if (stream == null) throw new ArgumentNullException(nameof(stream));
@@ -188,6 +193,7 @@ namespace Be.Stateless.IO.Extensions
 		/// <param name="stream">The stream whose content needs to be saved.</param>
 		/// <param name="path">The file path to where to save the stream.</param>
 		/// <remarks>Useful for debugging.</remarks>
+		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Public API.")]
 		public static void Save(this Stream stream, string path)
 		{
 			if (stream == null) throw new ArgumentNullException(nameof(stream));

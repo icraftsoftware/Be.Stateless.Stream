@@ -32,14 +32,14 @@ namespace Be.Stateless.Extensions
 		}
 
 		[Fact]
-		public void CommonPathInexistent()
+		public void CommonPathNonexistent()
 		{
 			var paths = new[] { "a.b.c.d.e.f", "a.b.c.d.k", "a.b.c", "x.y.z" };
 			paths.CommonPath(".").Should().BeEmpty();
 		}
 
 		[Fact]
-		public void CommonPathInexistentToo()
+		public void CommonPathNonexistentToo()
 		{
 			var paths = new[] { "a.b.c.d.e.f", "x.y.z", "m.n.o.p" };
 			paths.CommonPath(".").Should().BeEmpty();

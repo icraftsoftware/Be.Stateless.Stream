@@ -115,6 +115,7 @@ namespace Be.Stateless.IO
 		/// The sum of <paramref name="offset"/> and <paramref name="count"/> is greater than the <paramref name="bytes"/>' array
 		/// length.
 		/// </exception>
+		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 		public byte[] Append(byte[] bytes, int offset, int count)
 		{
 			if (bytes == null) throw new ArgumentNullException(nameof(bytes));
@@ -150,6 +151,7 @@ namespace Be.Stateless.IO
 		/// cref="IEnumerable{T}"/> of byte-array buffers might be a subset of what it was initially.
 		/// </returns>
 		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Any does not really enumerate.")]
+		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 		public IEnumerable<byte[]> Append(IEnumerable<byte[]> buffers)
 		{
 			if (buffers == null) throw new ArgumentNullException(nameof(buffers));
@@ -180,6 +182,7 @@ namespace Be.Stateless.IO
 		/// The array of bytes that could not be appended to the underlying controlled buffer because of availability shortage.
 		/// </returns>
 		[SuppressMessage("Naming", "CA1720:Identifier contains type name")]
+		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 		public byte[] Append(string @string, Encoding encoding)
 		{
 			if (encoding == null) throw new ArgumentNullException(nameof(encoding));
@@ -198,10 +201,11 @@ namespace Be.Stateless.IO
 		/// <returns>
 		/// The total number of bytes appended to the underlying controlled buffer.
 		/// </returns>
+		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 		public int Append(Func<byte[], int, int, int> @delegate)
 		{
 			if (@delegate == null) throw new ArgumentNullException(nameof(@delegate));
-			if (_availability <= 0) throw new InvalidOperationException($"{typeof(BufferController).Name} has no more availability to append further bytes to buffer.");
+			if (_availability <= 0) throw new InvalidOperationException($"{nameof(BufferController)} has no more availability to append further bytes to buffer.");
 			var count = @delegate(_buffer, _offset, _availability);
 			_availability -= count;
 			_count += count;

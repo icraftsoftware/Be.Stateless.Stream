@@ -33,6 +33,7 @@ namespace Be.Stateless.IO
 	/// </para>
 	/// </remarks>
 	/// <seealso href="http://msdn.microsoft.com/en-us/magazine/cc163768.aspx" />
+	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "Public API.")]
 	public class StringStream : Stream
 	{
 		/// <summary>
@@ -163,18 +164,12 @@ namespace Be.Stateless.IO
 
 		public override long Seek(long offset, SeekOrigin origin)
 		{
-			switch (origin)
-			{
-				case SeekOrigin.Begin:
-					Position = offset;
-					break;
-				case SeekOrigin.End:
-					Position = _byteLength + offset;
-					break;
-				case SeekOrigin.Current:
-					Position = Position + offset;
-					break;
-			}
+			Position = origin switch {
+				SeekOrigin.Begin => offset,
+				SeekOrigin.End => _byteLength + offset,
+				SeekOrigin.Current => Position + offset,
+				_ => Position
+			};
 			return Position;
 		}
 

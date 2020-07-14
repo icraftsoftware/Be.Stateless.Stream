@@ -32,6 +32,7 @@ namespace Be.Stateless.IO
 	public class StringStreamFixture
 	{
 		[Fact]
+		[SuppressMessage("ReSharper", "StringLiteralTypo")]
 		public void PlainTextLengthIsByteCountPlusBom()
 		{
 			const string content = "Hello world! And some @#$%^&*éèöäñ";
@@ -42,6 +43,7 @@ namespace Be.Stateless.IO
 		}
 
 		[Fact]
+		[SuppressMessage("ReSharper", "StringLiteralTypo")]
 		public void PlainTextRoundTripping()
 		{
 			const string content = "Hello world! And some @#$%^&*éèöäñ";

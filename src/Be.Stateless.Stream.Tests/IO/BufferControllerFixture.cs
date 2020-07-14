@@ -229,7 +229,7 @@ namespace Be.Stateless.IO
 			var buffer = new byte[0];
 			var controller = new BufferController(buffer, 0, buffer.Length);
 			Action act = () => controller.Append(Read);
-			act.Should().Throw<InvalidOperationException>().WithMessage($"{typeof(BufferController).Name} has no more availability to append further bytes to buffer.");
+			act.Should().Throw<InvalidOperationException>().WithMessage($"{nameof(BufferController)} has no more availability to append further bytes to buffer.");
 		}
 
 		private int Read(byte[] buffer, int offset, int count)

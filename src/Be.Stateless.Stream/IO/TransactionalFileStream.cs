@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using log4net;
@@ -31,6 +32,7 @@ namespace Be.Stateless.IO
 	{
 		#region Nested Type: NativeMethods
 
+		[SuppressMessage("ReSharper", "StringLiteralTypo")]
 		private static class NativeMethods
 		{
 			[DllImport("Kernel32.dll", SetLastError = true)]
@@ -56,7 +58,7 @@ namespace Be.Stateless.IO
 
 		#endregion
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope")]
+		[SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope")]
 		internal TransactionalFileStream(IntPtr transactionHandle, string path, int bufferSize)
 			: base(TransactionalFile.CreateFileTransactedHandle(transactionHandle, path), FileAccess.Write, bufferSize)
 		{
@@ -109,8 +111,7 @@ namespace Be.Stateless.IO
 			{
 				if (_logger.IsWarnEnabled) _logger.Warn("Finalizer with a transaction yet unresolved, that is neither committed nor rolled back.");
 				var result = NativeMethods.CloseHandle(_transactionHandle);
-				if (!result && _logger.IsWarnEnabled)
-					_logger.WarnFormat("Cannot close kernel transaction handle in finalizer. Win32 error code: {0}.", Marshal.GetLastWin32Error());
+				if (!result && _logger.IsWarnEnabled) _logger.WarnFormat("Cannot close kernel transaction handle in finalizer. Win32 error code: {0}.", Marshal.GetLastWin32Error());
 				_transactionHandle = IntPtr.Zero;
 			}
 		}

@@ -46,6 +46,7 @@ namespace Be.Stateless.IO
 	{
 		#region Nested Type: NativeMethods
 
+		[SuppressMessage("ReSharper", "StringLiteralTypo")]
 		private static class NativeMethods
 		{
 			[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
@@ -133,6 +134,7 @@ namespace Be.Stateless.IO
 		/// </remarks>
 		/// <seealso cref="OperatingSystemExtensions"/>
 		/// <seealso cref="OperatingSystemExtensions.SupportTransactionalFileSystem"/>
+		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 		public static FileStream Create(string path, int bufferSize = 4 * 1024, IKernelTransaction transaction = null)
 		{
 			if (path.IsNullOrEmpty()) throw new ArgumentNullException(nameof(path));
@@ -210,6 +212,7 @@ namespace Be.Stateless.IO
 		/// A handle to the transaction.
 		/// </param>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa365241(v=vs.85).aspx"/>
+		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 		public static void Move(string sourceFilePath, string targetFilePath, IKernelTransaction transaction)
 		{
 			if (sourceFilePath.IsNullOrEmpty()) throw new ArgumentNullException(nameof(sourceFilePath));
@@ -228,9 +231,8 @@ namespace Be.Stateless.IO
 
 		private const uint GENERIC_WRITE = 0x40000000;
 
-		/// <summary>
-		/// <c>internal</c> for the sake of unit testing only.
-		/// </summary>
+		[SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Global")]
+		// ReSharper disable once MemberCanBePrivate.Global
 		internal static OperatingSystem _operatingSystem = Environment.OSVersion;
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(TransactionalFile));

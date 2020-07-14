@@ -143,6 +143,7 @@ namespace Be.Stateless.IO.Extensions
 		}
 
 		[Fact]
+		[SuppressMessage("ReSharper", "StringLiteralTypo")]
 		public void GetApplicationMimeType()
 		{
 			var stream = File.OpenRead(Assembly.GetExecutingAssembly().Location);

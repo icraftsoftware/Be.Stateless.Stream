@@ -16,11 +16,14 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Be.Stateless.IO
 {
 	/// <summary>
 	/// Represents a transaction to be performed at a transactional stream, like <see cref="TransactionalFileStream"/>.
 	/// </summary>
+	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 	public interface ITransactionalStream
 	{
 		/// <summary>

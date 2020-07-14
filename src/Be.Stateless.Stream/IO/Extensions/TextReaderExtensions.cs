@@ -16,14 +16,17 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 
 namespace Be.Stateless.IO.Extensions
 {
+	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "Public API.")]
 	public static class TextReaderExtensions
 	{
+		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 		public static bool IsXml(this TextReader reader)
 		{
 			// https://stackoverflow.com/questions/18704586/testing-whether-or-not-something-is-parseable-xml-in-c-sharp
