@@ -51,20 +51,20 @@ namespace Be.Stateless.IO
 		public BufferController(byte[] buffer, int offset, int availability)
 		{
 			_buffer = buffer ?? throw new ArgumentNullException(nameof(buffer));
-			_availability = availability;
-			_count = 0;
+			Availability = availability;
+			Count = 0;
 			_offset = offset;
 		}
 
 		/// <summary>
 		/// The number of available bytes than can yet be appended to the underlying controlled buffer.
 		/// </summary>
-		public int Availability => _availability;
+		public int Availability { get; private set; }
 
 		/// <summary>
 		/// The total number of bytes that have been appended to the underlying controlled buffer.
 		/// </summary>
-		public int Count => _count;
+		public int Count { get; private set; }
 
 		/// <summary>
 		/// Append an array of bytes to the underlying controlled buffer.
@@ -78,11 +78,11 @@ namespace Be.Stateless.IO
 		/// </returns>
 		public byte[] Append(byte[] bytes)
 		{
-			if (bytes == null || bytes.Length == 0 || _availability == 0) return bytes;
-			var count = Math.Min(_availability, bytes.Length);
+			if (bytes == null || bytes.Length == 0 || Availability == 0) return bytes;
+			var count = Math.Min(Availability, bytes.Length);
 			Buffer.BlockCopy(bytes, 0, _buffer, _offset, count);
-			_availability -= count;
-			_count += count;
+			Availability -= count;
+			Count += count;
 			_offset += count;
 			// return the trailing bytes that could not be appended to the buffer
 			return bytes.Subarray(count);
@@ -125,11 +125,11 @@ namespace Be.Stateless.IO
 
 			if (bytes.Length == 0 || count == 0) return null;
 
-			var actualCount = Math.Min(_availability, count);
+			var actualCount = Math.Min(Availability, count);
 
 			Buffer.BlockCopy(bytes, offset, _buffer, _offset, actualCount);
-			_availability -= actualCount;
-			_count += actualCount;
+			Availability -= actualCount;
+			Count += actualCount;
 			_offset += actualCount;
 
 			// return the trailing bytes that could not be appended to the buffer
@@ -156,7 +156,7 @@ namespace Be.Stateless.IO
 		{
 			if (buffers == null) throw new ArgumentNullException(nameof(buffers));
 
-			while (_availability > 0 && buffers.Any())
+			while (Availability > 0 && buffers.Any())
 			{
 				var backlog = Append(buffers.First());
 				buffers = buffers.Skip(1);
@@ -205,17 +205,15 @@ namespace Be.Stateless.IO
 		public int Append(Func<byte[], int, int, int> @delegate)
 		{
 			if (@delegate == null) throw new ArgumentNullException(nameof(@delegate));
-			if (_availability <= 0) throw new InvalidOperationException($"{nameof(BufferController)} has no more availability to append further bytes to buffer.");
-			var count = @delegate(_buffer, _offset, _availability);
-			_availability -= count;
-			_count += count;
+			if (Availability <= 0) throw new InvalidOperationException($"{nameof(BufferController)} has no more availability to append further bytes to buffer.");
+			var count = @delegate(_buffer, _offset, Availability);
+			Availability -= count;
+			Count += count;
 			_offset += count;
 			return count;
 		}
 
 		private readonly byte[] _buffer;
-		private int _availability;
-		private int _count;
 		private int _offset;
 	}
 }
