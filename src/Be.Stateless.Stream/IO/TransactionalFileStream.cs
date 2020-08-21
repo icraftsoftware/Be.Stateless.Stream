@@ -89,6 +89,7 @@ namespace Be.Stateless.IO
 		/// if properly closed, and rollback it if disposed...
 		/// </summary>
 		/// <param name="disposing"></param>
+		[SuppressMessage("ReSharper", "InvertIf")]
 		protected override void Dispose(bool disposing)
 		{
 			// <see also href="http://msdn.microsoft.com/en-us/magazine/cc163392.aspx"/>
