@@ -1,13 +1,13 @@
 ﻿#region Copyright & License
 
 // Copyright © 2012 - 2020 François Chabot
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,7 +35,7 @@ namespace Be.Stateless.IO
 	/// Microsoft strongly recommends developers utilize alternative means to achieve your application's needs. Many scenarios
 	/// that TxF was developed for can be achieved through simpler and more readily available techniques. Furthermore, TxF may
 	/// not be available in future versions of Microsoft Windows. For more information, and alternatives to TxF, please see <a
-	/// href="https://msdn.microsoft.com/en-us/library/windows/desktop/hh802690(v=vs.85).aspx">Alternatives to using
+	/// href="https://docs.microsoft.com/en-us/windows/win32/fileio/deprecation-of-txf">Alternatives to using
 	/// Transactional NTFS</a>.
 	/// </para>
 	/// <para>
@@ -211,7 +211,7 @@ namespace Be.Stateless.IO
 		/// <param name="transaction">
 		/// A handle to the transaction.
 		/// </param>
-		/// <seealso href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa365241(v=vs.85).aspx"/>
+		/// <seealso href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefiletransacteda"/>
 		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 		public static void Move(string sourceFilePath, string targetFilePath, IKernelTransaction transaction)
 		{
@@ -253,8 +253,8 @@ namespace Be.Stateless.IO
 				transactionHandle,
 				IntPtr.Zero,
 				IntPtr.Zero);
-			// see https://msdn.microsoft.com/en-us/library/windows/desktop/aa363859.aspx, Return Value: if the function
-			// fails, the return value is INVALID_HANDLE_VALUE. To get extended error information, call GetLastError.
+			// see https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createfiletransacteda
+			// if the function fails, the return value is INVALID_HANDLE_VALUE. To get extended error information, call GetLastError.
 			if (fileHandle.IsInvalid)
 				throw new IOException(
 					$"Null transacted file handle for file '{path}'.",

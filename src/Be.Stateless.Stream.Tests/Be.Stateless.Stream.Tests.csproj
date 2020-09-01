@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\..\.settings\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="IO\Data\utf-16.xml" />
     <None Remove="IO\Data\utf-8.xml" />
     <None Remove="IO\Extensions\Schema.xsd" />
