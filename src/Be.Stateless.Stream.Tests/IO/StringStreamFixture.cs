@@ -58,7 +58,7 @@ namespace Be.Stateless.IO
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void Utf16EmbeddedResourceRoundTripping()
 		{
-			var xmlContent = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.IO.Data.utf-16.xml", s => new StreamReader(s).ReadToEnd());
+			var xmlContent = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.utf-16.xml", s => new StreamReader(s).ReadToEnd());
 			using (var stream = new StringStream(CreateXmlDocument(xmlContent).DocumentElement.OuterXml))
 			{
 				var actual = XDocument.Parse(stream.ReadToEnd());
@@ -70,7 +70,7 @@ namespace Be.Stateless.IO
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void Utf16XmlReaderRoundTripping()
 		{
-			var xmlContent = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.IO.Data.utf-16.xml", s => new StreamReader(s).ReadToEnd());
+			var xmlContent = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.utf-16.xml", s => new StreamReader(s).ReadToEnd());
 			using (var stream = new StringStream(CreateXmlDocument(xmlContent).DocumentElement.OuterXml))
 			using (var xmlReader = XmlReader.Create(stream, new XmlReaderSettings { CloseInput = true }))
 			{
@@ -84,7 +84,7 @@ namespace Be.Stateless.IO
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void Utf8EmbeddedResourceRoundTripping()
 		{
-			var xmlContent = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.IO.Data.utf-8.xml", s => new StreamReader(s).ReadToEnd());
+			var xmlContent = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.utf-8.xml", s => new StreamReader(s).ReadToEnd());
 			using (var stream = new StringStream(CreateXmlDocument(xmlContent).DocumentElement.OuterXml))
 			{
 				var actual = XDocument.Parse(stream.ReadToEnd());
@@ -96,7 +96,7 @@ namespace Be.Stateless.IO
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void Utf8XmlReaderRoundTripping()
 		{
-			var xmlContent = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.IO.Data.utf-8.xml", s => new StreamReader(s).ReadToEnd());
+			var xmlContent = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.utf-8.xml", s => new StreamReader(s).ReadToEnd());
 			using (var stream = new StringStream(CreateXmlDocument(xmlContent).DocumentElement.OuterXml))
 			using (var xmlReader = XmlReader.Create(stream, new XmlReaderSettings { CloseInput = true }))
 			{

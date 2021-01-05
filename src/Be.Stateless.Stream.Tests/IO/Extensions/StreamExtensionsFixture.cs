@@ -21,6 +21,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Be.Stateless.Dummies.IO;
 using Be.Stateless.Resources;
 using FluentAssertions;
 using Moq;
@@ -51,7 +52,7 @@ namespace Be.Stateless.IO.Extensions
 		[Fact]
 		public void CompressAboveThreshold()
 		{
-			using (var stream = FakeTextStream.Create(1024 * 120))
+			using (var stream = TextStreamDummy.Create(1024 * 120))
 			{
 				stream.TryCompressToBase64String(16, out _).Should().BeFalse();
 			}
@@ -153,7 +154,7 @@ namespace Be.Stateless.IO.Extensions
 		[Fact]
 		public void GetMimeTypeOfDeflatedStream()
 		{
-			var res = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.IO.Extensions.Schema.xsd");
+			var res = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.Schema.xsd");
 			var stream = res
 				.CompressToBase64String()
 				.DecompressFromBase64String();
@@ -163,7 +164,7 @@ namespace Be.Stateless.IO.Extensions
 		[Fact]
 		public void GetXmlMimeType()
 		{
-			var stream = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.IO.Extensions.Schema.xsd");
+			var stream = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.Schema.xsd");
 			stream.GetMimeType().Should().Be("text/xml");
 		}
 

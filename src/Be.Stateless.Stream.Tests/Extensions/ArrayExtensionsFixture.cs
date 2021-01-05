@@ -25,72 +25,29 @@ namespace Be.Stateless.Extensions
 	public class ArrayExtensionsFixture
 	{
 		[Fact]
-		public void CommonPath()
-		{
-			var paths = new[] { "a.b.c.d.e.f", "a.b.c.d.k", "a.b.c" };
-			paths.CommonPath(".").Should().Be("a.b.c");
-		}
-
-		[Fact]
-		public void CommonPathNonexistent()
-		{
-			var paths = new[] { "a.b.c.d.e.f", "a.b.c.d.k", "a.b.c", "x.y.z" };
-			paths.CommonPath(".").Should().BeEmpty();
-		}
-
-		[Fact]
-		public void CommonPathNonexistentToo()
-		{
-			var paths = new[] { "a.b.c.d.e.f", "x.y.z", "m.n.o.p" };
-			paths.CommonPath(".").Should().BeEmpty();
-		}
-
-		[Fact]
-		public void CommonPathOfEmptyArray()
-		{
-			var paths = new string[0];
-			paths.CommonPath(".").Should().BeEmpty();
-		}
-
-		[Fact]
 		[SuppressMessage("ReSharper", "ExpressionIsAlwaysNull")]
-		public void CommonPathOfNullArray()
-		{
-			string[] paths = null;
-			paths.CommonPath(".").Should().BeEmpty();
-		}
-
-		[Fact]
-		public void CommonPathOfSingletonArray()
-		{
-			var paths = new[] { "a.b.c.d.e.f" };
-			paths.CommonPath(".").Should().Be("a.b.c.d.e.f");
-		}
-
-		[Fact]
-		[SuppressMessage("ReSharper", "ExpressionIsAlwaysNull")]
-		public void RangeOfNullArray()
+		public void SubarrayOfNullArray()
 		{
 			byte[] array = null;
 			array.Subarray(2).Should().BeNull();
 		}
 
 		[Fact]
-		public void RangeReturnsTailFromStartIndex()
+		public void SubarrayReturnsTailFromStartIndex()
 		{
 			var array = new byte[] { 1, 2, 3, 4, 5 };
 			array.Subarray(2).Should().BeEquivalentTo(new byte[] { 3, 4, 5 });
 		}
 
 		[Fact]
-		public void RangeStartIndexIsBelowLowerBound()
+		public void SubarrayStartIndexIsBelowLowerBound()
 		{
 			var array = new byte[] { 1, 2, 3 };
 			array.Subarray(-7).Should().BeEquivalentTo(array);
 		}
 
 		[Fact]
-		public void RangeStartIndexIsBeyondUpperBound()
+		public void SubarrayStartIndexIsBeyondUpperBound()
 		{
 			var array = new byte[] { 1, 2, 3 };
 			array.Subarray(9).Should().BeNull();

@@ -1,4 +1,4 @@
-﻿[submodule ".settings"]
+[submodule ".settings"]
 	path = .settings
 	url = https://github.com/icraftsoftware/Be.Stateless.Editor.Config.git
 [submodule ".build"]

@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.0;net48</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
     <RootNamespace>Be.Stateless</RootNamespace>
     <AssemblyTitle>Be.Stateless.Stream.Tests</AssemblyTitle>
-    <Description>Unit tests for stream class library for general .NET development.</Description>
+    <Description>Unit tests for stream class library for general purpose .NET development.</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,26 +12,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="IO\Data\utf-16.xml" />
-    <None Remove="IO\Data\utf-8.xml" />
-    <None Remove="IO\Extensions\Schema.xsd" />
+    <EmbeddedResource Include="Resources\Schema.xsd" />
+    <EmbeddedResource Include="Resources\utf-16.xml" />
+    <EmbeddedResource Include="Resources\utf-8.xml" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="IO\Data\utf-16.xml" />
-    <EmbeddedResource Include="IO\Data\utf-8.xml" />
-    <EmbeddedResource Include="IO\Extensions\Schema.xsd" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Be.Stateless.Common" Version="2.0.20224.34757" />
+    <PackageReference Include="Be.Stateless.Common" Version="2.0.21005.39505" />
     <PackageReference Include="coverlet.msbuild" Version="2.9.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
-    <PackageReference Include="Moq" Version="4.13.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="Moq" Version="4.15.2" />
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="xunit.core" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -42,6 +36,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Be.Stateless.Stream\Be.Stateless.Stream.csproj" />
+    <ProjectReference Include="..\Be.Stateless.Stream.Unit\Be.Stateless.Stream.Unit.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
