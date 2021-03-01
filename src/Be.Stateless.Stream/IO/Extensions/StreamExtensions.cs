@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2020 François Chabot
+// Copyright © 2012 - 2021 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -152,7 +152,7 @@ namespace Be.Stateless.IO.Extensions
 			var buffer = new byte[count];
 			count = stream.Read(buffer, 0, count);
 			var hresult = NativeMethods.FindMimeFromData(IntPtr.Zero, null, buffer, count, null, 0, out var mimeType, 0);
-			if (hresult != 0) throw Marshal.GetExceptionForHR(hresult);
+			if (hresult != 0) throw Marshal.GetExceptionForHR(hresult)!;
 			if (stream.CanSeek) stream.Position = 0L;
 			return mimeType;
 		}

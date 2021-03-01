@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2020 François Chabot
+// Copyright © 2012 - 2021 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
 using Xunit;
+using static FluentAssertions.FluentActions;
 
 namespace Be.Stateless.IO
 {
@@ -58,23 +59,18 @@ namespace Be.Stateless.IO
 		{
 			var controller = new BufferController(new byte[3], 0, 3);
 
-			Action act = () => controller.Append(null, 0, 0);
-			act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "bytes");
-
-			act = () => controller.Append(new byte[0], -1, 0);
-			act.Should().Throw<ArgumentException>().WithMessage("Offset cannot be negative.*");
-
-			act = () => controller.Append(new byte[0], 1, -1);
-			act.Should().Throw<ArgumentException>().WithMessage("Count cannot be negative.*");
-
-			act = () => controller.Append(new byte[0], 1, 0);
-			act.Should().Throw<ArgumentException>().WithMessage("The sum of offset and count is greater than the byte array length.");
-
-			act = () => controller.Append(new byte[2], 0, 3);
-			act.Should().Throw<ArgumentException>().WithMessage("The sum of offset and count is greater than the byte array length.");
-
-			act = () => controller.Append(new byte[0], 0, 0);
-			act.Should().NotThrow();
+			Invoking(() => controller.Append(null, 0, 0))
+				.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "bytes");
+			Invoking(() => controller.Append(new byte[0], -1, 0))
+				.Should().Throw<ArgumentException>().WithMessage("Offset cannot be negative.*");
+			Invoking(() => controller.Append(new byte[0], 1, -1))
+				.Should().Throw<ArgumentException>().WithMessage("Count cannot be negative.*");
+			Invoking(() => controller.Append(new byte[0], 1, 0))
+				.Should().Throw<ArgumentException>().WithMessage("The sum of offset and count is greater than the byte array length.");
+			Invoking(() => controller.Append(new byte[2], 0, 3))
+				.Should().Throw<ArgumentException>().WithMessage("The sum of offset and count is greater than the byte array length.");
+			Invoking(() => controller.Append(new byte[0], 0, 0))
+				.Should().NotThrow();
 		}
 
 		[Fact]
@@ -143,8 +139,7 @@ namespace Be.Stateless.IO
 		public void AppendBufferListThrows()
 		{
 			var controller = new BufferController(new byte[3], 0, 3);
-			Action act = () => controller.Append((IEnumerable<byte[]>) null);
-			act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "buffers");
+			Invoking(() => controller.Append((IEnumerable<byte[]>) null)).Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "buffers");
 		}
 
 		[Fact]
@@ -228,8 +223,8 @@ namespace Be.Stateless.IO
 		{
 			var buffer = new byte[0];
 			var controller = new BufferController(buffer, 0, buffer.Length);
-			Action act = () => controller.Append(Read);
-			act.Should().Throw<InvalidOperationException>().WithMessage($"{nameof(BufferController)} has no more availability to append further bytes to buffer.");
+			Invoking(() => controller.Append(Read))
+				.Should().Throw<InvalidOperationException>().WithMessage($"{nameof(BufferController)} has no more availability to append further bytes to buffer.");
 		}
 
 		private int Read(byte[] buffer, int offset, int count)

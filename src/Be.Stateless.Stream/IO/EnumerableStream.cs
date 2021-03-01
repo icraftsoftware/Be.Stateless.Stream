@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2020 François Chabot
+// Copyright © 2012 - 2021 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ namespace Be.Stateless.IO
 		/// <param name="enumerable">
 		/// The <see cref="IEnumerable{T}"/> over the arrays of <see cref="byte"/>s.
 		/// </param>
+		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Public API.")]
 		public EnumerableStream(IEnumerable<byte[]> enumerable)
 		{
 			if (enumerable == null) throw new ArgumentNullException(nameof(enumerable));
@@ -58,6 +59,7 @@ namespace Be.Stateless.IO
 		/// The <see cref="Encoding.Unicode"/> encoding will be assumed to transform the <see cref="string"/>s into their
 		/// <see cref="byte"/> equivalent.
 		/// </remarks>
+		[SuppressMessage("ReSharper", "MemberCanBeProtected.Global", Justification = "Public API.")]
 		public EnumerableStream(IEnumerable<string> enumerable) : this(enumerable.Select(s => Encoding.Unicode.GetBytes(s))) { }
 
 		#region Base Class Member Overrides

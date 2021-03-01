@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2020 François Chabot
+// Copyright © 2012 - 2021 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@ namespace Be.Stateless.IO
 	/// Control operations on a temporary buffer.
 	/// </summary>
 	/// <remarks>
-	/// A temporary buffer is typically used in a <see cref=" Stream"/>-based component while reading from one <see
+	/// A temporary buffer is typically used in a <see cref="Stream"/>-based component while reading from one <see
 	/// cref="Stream"/> and writing to an other, or when one needs to transcode the bytes that have been read before being
-	/// written to the buffer allocated by the <see cref=" Stream"/>'s client.
+	/// written to the buffer allocated by the <see cref="Stream"/>'s client.
 	/// </remarks>
 	public class BufferController
 	{

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2020 François Chabot
+// Copyright © 2012 - 2021 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ namespace Be.Stateless.IO
 	/// Represents a transaction to be performed at a transactional stream, like <see cref="TransactionalFileStream"/>.
 	/// </summary>
 	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
+	[SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
 	public interface ITransactionalStream
 	{
 		/// <summary>

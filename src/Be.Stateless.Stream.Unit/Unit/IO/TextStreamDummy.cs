@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2020 François Chabot
+// Copyright © 2012 - 2021 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,12 +17,13 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Be.Stateless.IO;
 
-namespace Be.Stateless.Dummies.IO
+namespace Be.Stateless.Unit.IO
 {
 	/// <summary>
 	/// Text <see cref="Stream"/> whose content is dynamically generated up to a rounded-up size limit.
@@ -32,8 +33,10 @@ namespace Be.Stateless.Dummies.IO
 	/// come in handy in compression-related scenarios (e.g. claim-check) due to the pseudo-random nature of <see cref="Guid"/>s
 	/// which exhibit a poor compression ratio.
 	/// </remarks>
+	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "Public API.")]
 	public class TextStreamDummy : EnumerableStream
 	{
+		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 		public static Stream Create(int size)
 		{
 			return new TextStreamDummy(size / _guidByteCount + 1);

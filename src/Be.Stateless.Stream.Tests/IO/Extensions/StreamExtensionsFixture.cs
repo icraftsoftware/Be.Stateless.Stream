@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2020 François Chabot
+// Copyright © 2012 - 2021 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,11 +21,12 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using Be.Stateless.Dummies.IO;
 using Be.Stateless.Resources;
+using Be.Stateless.Unit.IO;
 using FluentAssertions;
 using Moq;
 using Xunit;
+using static FluentAssertions.FluentActions;
 
 namespace Be.Stateless.IO.Extensions
 {
@@ -102,8 +103,7 @@ namespace Be.Stateless.IO.Extensions
 			input.Position = 0;
 			var output = input.CompressToBase64String();
 
-			Action act = () => Convert.FromBase64String(output);
-			act.Should().NotThrow();
+			Invoking(() => Convert.FromBase64String(output)).Should().NotThrow();
 		}
 
 		[Fact]
@@ -174,16 +174,13 @@ namespace Be.Stateless.IO.Extensions
 			var input = new Mock<Stream>();
 			input.Setup(s => s.CanRead).Returns(false);
 
-			Action act = () => input.Object.CompressToBase64String();
-
-			act.Should().Throw<InvalidOperationException>();
+			Invoking(() => input.Object.CompressToBase64String()).Should().Throw<InvalidOperationException>();
 		}
 
 		[Fact]
 		public void ThrowsWhenCompressingFromNullInput()
 		{
-			Action act = () => ((Stream) null).CompressToBase64String();
-			act.Should().Throw<ArgumentNullException>();
+			Invoking(() => ((Stream) null).CompressToBase64String()).Should().Throw<ArgumentNullException>();
 		}
 	}
 }

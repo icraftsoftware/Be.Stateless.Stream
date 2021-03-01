@@ -3,18 +3,19 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
     <RootNamespace>Be.Stateless</RootNamespace>
-    <AssemblyName>Be.Stateless.Stream.Tests</AssemblyName>
-    <Description>Unit tests for stream class library for general purpose .NET development.</Description>
+    <AssemblyName>Be.Stateless.Stream.Unit.Tests</AssemblyName>
+    <Description>Unit tests for stream unit test library for general purpose .NET development.</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\.settings\.editorconfig" Link=".editorconfig" />
+    <EmbeddedResource Include="Resources\Resource.txt" />
+    <EmbeddedResource Include="Unit\Resources\Data\Resource.Composite.Name.txt" />
+    <EmbeddedResource Include="Unit\Resources\Data\Resource.txt" />
+    <EmbeddedResource Include="Unit\Resources\Resource.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Schema.xsd" />
-    <EmbeddedResource Include="Resources\utf-16.xml" />
-    <EmbeddedResource Include="Resources\utf-8.xml" />
+    <None Include="..\..\.settings\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,7 +26,6 @@
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
     <PackageReference Include="Moq" Version="4.15.2" />
-    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="xunit.core" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <PrivateAssets>all</PrivateAssets>
@@ -34,12 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Be.Stateless.Stream\Be.Stateless.Stream.csproj" />
     <ProjectReference Include="..\Be.Stateless.Stream.Unit\Be.Stateless.Stream.Unit.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
-    <Reference Include="System.Transactions" />
   </ItemGroup>
 
 </Project>
