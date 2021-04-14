@@ -25,8 +25,8 @@ using Be.Stateless.Extensions;
 
 namespace Be.Stateless.IO.Extensions
 {
-	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "Public API.")]
 	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
+	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "Public API.")]
 	public static class StreamExtensions
 	{
 		#region Nested Type: NativeMethods
@@ -93,38 +93,6 @@ namespace Be.Stateless.IO.Extensions
 			// Read and write in chunks of 1K
 			var tempBuffer = new byte[1024];
 			while (stream.Read(tempBuffer, 0, tempBuffer.Length) != 0) { }
-		}
-
-		/// <summary>
-		/// Save the content of a stream to disk by going through a temporary file.
-		/// </summary>
-		/// <param name="stream">The stream whose content needs to be saved.</param>
-		/// <param name="folder">The folder where to save the stream.</param>
-		/// <param name="name">The file name to use to save the stream.</param>
-		/// <remarks>
-		/// <para>
-		/// The <paramref name="stream"/> is first saved to a temporary file before being moved to file with the given <paramref name="name"/>, but only after its content
-		/// has been completely flushed to disk.
-		/// </para>
-		/// <para>
-		/// The target <paramref name="folder"/> is created if it does not exist.
-		/// </para>
-		/// </remarks>
-		[SuppressMessage("Globalization", "CA1305:Specify IFormatProvider")]
-		public static void DropToFolder(this Stream stream, string folder, string name)
-		{
-			if (stream == null) throw new ArgumentNullException(nameof(stream));
-			if (folder.IsNullOrEmpty()) throw new ArgumentNullException(nameof(folder));
-			if (name.IsNullOrEmpty()) throw new ArgumentNullException(nameof(name));
-			Directory.CreateDirectory(folder);
-			var path = System.IO.Path.Combine(folder, name);
-			File.Delete(path);
-			// save to a temporary file with a GUID and no extension as name
-			var tempFileName = Guid.NewGuid().ToString("N");
-			var tempPath = System.IO.Path.Combine(folder, tempFileName);
-			stream.Save(tempPath);
-			stream.Close();
-			File.Move(tempPath, path);
 		}
 
 		/// <summary>

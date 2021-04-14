@@ -21,6 +21,7 @@ using System.Reflection;
 
 namespace Be.Stateless.Unit.Resources
 {
+	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "Public API.")]
 	public static class ResourceManagerFactory
 	{
