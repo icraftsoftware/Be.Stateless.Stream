@@ -42,7 +42,7 @@ namespace Be.Stateless.Unit.IO
 			return new TextStreamDummy(size / _guidByteCount + 1);
 		}
 
-		private TextStreamDummy(int count) : base(Enumerable.Range(0, count).Select(i => Guid.NewGuid().ToString("N")))
+		private TextStreamDummy(int count) : base(Enumerable.Range(0, count).Select(_ => Guid.NewGuid().ToString("N")))
 		{
 			_length = count * _guidByteCount;
 		}
