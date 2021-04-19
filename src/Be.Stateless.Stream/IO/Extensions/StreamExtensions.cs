@@ -150,6 +150,7 @@ namespace Be.Stateless.IO.Extensions
 		public static Stream Rewind(this Stream stream)
 		{
 			if (stream == null) throw new ArgumentNullException(nameof(stream));
+			if (stream.Position == 0) return stream;
 			if (!stream.CanSeek) throw new InvalidOperationException("Stream cannot be rewinded.");
 			stream.Position = 0;
 			return stream;
@@ -223,7 +224,7 @@ namespace Be.Stateless.IO.Extensions
 			}
 
 			// HACK to avoid (most of the time) firing end of stream event on input stream when we do not actually allow compression
-			var endOfStreamPossiblyReached = bytesRead < bufferSize && bytesRead > 0;
+			var endOfStreamPossiblyReached = bytesRead is < bufferSize and > 0;
 			// try to read one more byte to check for end of stream if the last read returned less than what we requested if we are unlucky, that last read will return the
 			// last byte and fire the end of stream event :-( but this should not be the case most of the time
 			if (endOfStreamPossiblyReached)

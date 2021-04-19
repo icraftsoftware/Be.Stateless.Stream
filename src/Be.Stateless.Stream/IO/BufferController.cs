@@ -160,7 +160,7 @@ namespace Be.Stateless.IO
 			{
 				var backlog = Append(buffers.First());
 				buffers = buffers.Skip(1);
-				if (backlog != null && backlog.Length > 0)
+				if (backlog is { Length: > 0 })
 				{
 					return Enumerable.Repeat(backlog, 1).Concat(buffers).ToArray();
 				}
