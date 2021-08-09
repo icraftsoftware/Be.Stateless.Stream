@@ -48,7 +48,7 @@ namespace Be.Stateless.Unit.Resources
 			if (stream == null)
 				throw _type != null
 					? new FileNotFoundException($"Cannot find resource '{name}' scoped to type '{_type.FullName}' in assembly '{_assembly.FullName}'.", name)
-					: new FileNotFoundException($"Cannot find resource '{name}' in assembly '{_assembly.FullName}'.", name);
+					: new($"Cannot find resource '{name}' in assembly '{_assembly.FullName}'.", name);
 			return stream;
 		}
 
@@ -93,7 +93,7 @@ namespace Be.Stateless.Unit.Resources
 				name,
 				stream => {
 					var xmlDocument = new XmlDocument { XmlResolver = null };
-					var reader = XmlReader.Create(stream, new XmlReaderSettings { XmlResolver = null });
+					var reader = XmlReader.Create(stream, new() { XmlResolver = null });
 					xmlDocument.Load(reader);
 					return xmlDocument.OuterXml;
 				});

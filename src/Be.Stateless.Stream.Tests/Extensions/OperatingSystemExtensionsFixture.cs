@@ -38,9 +38,9 @@ namespace Be.Stateless.Extensions
 		}
 
 		[SuppressMessage("ReSharper", "InconsistentNaming")]
-		internal static readonly OperatingSystem Windows7 = new(PlatformID.Win32NT, new Version("6.1.7601.65536"));
+		internal static readonly OperatingSystem Windows7 = new(PlatformID.Win32NT, new("6.1.7601.65536"));
 
 		[SuppressMessage("ReSharper", "InconsistentNaming")]
-		internal static readonly OperatingSystem WindowsXP = new(PlatformID.Win32NT, new Version("5.2.7601.65536"));
+		internal static readonly OperatingSystem WindowsXP = new(PlatformID.Win32NT, new("5.2.7601.65536"));
 	}
 }

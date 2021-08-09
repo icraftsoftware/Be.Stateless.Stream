@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2020 François Chabot
+// Copyright © 2012 - 2021 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ namespace Be.Stateless.IO
 		{
 			var xmlContent = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.utf-16.xml", s => new StreamReader(s).ReadToEnd());
 			using (var stream = new StringStream(CreateXmlDocument(xmlContent).DocumentElement.OuterXml))
-			using (var xmlReader = XmlReader.Create(stream, new XmlReaderSettings { CloseInput = true }))
+			using (var xmlReader = XmlReader.Create(stream, new() { CloseInput = true }))
 			{
 				xmlReader.MoveToContent();
 				var actual = XDocument.Parse(xmlReader.ReadOuterXml());
@@ -98,7 +98,7 @@ namespace Be.Stateless.IO
 		{
 			var xmlContent = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.utf-8.xml", s => new StreamReader(s).ReadToEnd());
 			using (var stream = new StringStream(CreateXmlDocument(xmlContent).DocumentElement.OuterXml))
-			using (var xmlReader = XmlReader.Create(stream, new XmlReaderSettings { CloseInput = true }))
+			using (var xmlReader = XmlReader.Create(stream, new() { CloseInput = true }))
 			{
 				xmlReader.MoveToContent();
 				var actual = XDocument.Parse(xmlReader.ReadOuterXml());
@@ -120,7 +120,7 @@ namespace Be.Stateless.IO
 		public void XmlTextRoundTripping()
 		{
 			const string content = "<root><node>content</node></root>";
-			using (var reader = XmlReader.Create(new StringStream(content), new XmlReaderSettings { CloseInput = true }))
+			using (var reader = XmlReader.Create(new StringStream(content), new() { CloseInput = true }))
 			{
 				reader.MoveToContent();
 				reader.ReadOuterXml().Should().Be(content);

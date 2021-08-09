@@ -61,15 +61,15 @@ namespace Be.Stateless.IO
 
 			Invoking(() => controller.Append(null, 0, 0))
 				.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "bytes");
-			Invoking(() => controller.Append(new byte[0], -1, 0))
+			Invoking(() => controller.Append(Array.Empty<byte>(), -1, 0))
 				.Should().Throw<ArgumentException>().WithMessage("Offset cannot be negative.*");
-			Invoking(() => controller.Append(new byte[0], 1, -1))
+			Invoking(() => controller.Append(Array.Empty<byte>(), 1, -1))
 				.Should().Throw<ArgumentException>().WithMessage("Count cannot be negative.*");
-			Invoking(() => controller.Append(new byte[0], 1, 0))
+			Invoking(() => controller.Append(Array.Empty<byte>(), 1, 0))
 				.Should().Throw<ArgumentException>().WithMessage("The sum of offset and count is greater than the byte array length.");
 			Invoking(() => controller.Append(new byte[2], 0, 3))
 				.Should().Throw<ArgumentException>().WithMessage("The sum of offset and count is greater than the byte array length.");
-			Invoking(() => controller.Append(new byte[0], 0, 0))
+			Invoking(() => controller.Append(Array.Empty<byte>(), 0, 0))
 				.Should().NotThrow();
 		}
 
@@ -77,7 +77,7 @@ namespace Be.Stateless.IO
 		public void AppendArrayWhenCountIsZero()
 		{
 			var controller = new BufferController(new byte[3], 0, 3);
-			controller.Append(new byte[0], 0, 0).Should().BeNull();
+			controller.Append(Array.Empty<byte>(), 0, 0).Should().BeNull();
 			controller.Availability.Should().Be(3);
 			controller.Count.Should().Be(0);
 		}
@@ -120,7 +120,7 @@ namespace Be.Stateless.IO
 				new byte[] { 7, 6, 5 }
 			};
 
-			controller.Append(buffers).Should().BeEquivalentTo(new byte[] { 8 }, new byte[] { 7, 6, 5 });
+			controller.Append(buffers).Should().BeEquivalentTo(new[] { new byte[] { 8 }, new byte[] { 7, 6, 5 } });
 			buffer.Should().BeEquivalentTo(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 });
 			controller.Availability.Should().Be(0);
 			controller.Count.Should().Be(9);
@@ -221,7 +221,7 @@ namespace Be.Stateless.IO
 		[Fact]
 		public void AppendWithReadDelegateThrowsIfNoAvailability()
 		{
-			var buffer = new byte[0];
+			var buffer = Array.Empty<byte>();
 			var controller = new BufferController(buffer, 0, buffer.Length);
 			Invoking(() => controller.Append(Read))
 				.Should().Throw<InvalidOperationException>().WithMessage($"{nameof(BufferController)} has no more availability to append further bytes to buffer.");

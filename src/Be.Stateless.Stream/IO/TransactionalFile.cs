@@ -1,13 +1,13 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2020 François Chabot
-//
+// Copyright © 2012 - 2021 François Chabot
+// 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-//
+// 
 // http://www.apache.org/licenses/LICENSE-2.0
-//
+// 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -139,7 +139,7 @@ namespace Be.Stateless.IO
 		{
 			if (path.IsNullOrEmpty()) throw new ArgumentNullException(nameof(path));
 			var fileStream = !_operatingSystem.SupportTransactionalFileSystem() || Path.IsNetworkPath(path)
-				? new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None, bufferSize)
+				? new(path, FileMode.CreateNew, FileAccess.Write, FileShare.None, bufferSize)
 				: transaction != null
 					? CreateTransacted(path, bufferSize, transaction)
 					: CreateTransacted(path, bufferSize);
@@ -195,7 +195,7 @@ namespace Be.Stateless.IO
 			if (transactionHandle == IntPtr.Zero) throw new InvalidOperationException("Cannot get handle to kernel transaction.");
 
 			// TransactionalFileStream unnecessary as the transaction is DTC enlisted: transaction is implicitly managed
-			return new FileStream(CreateFileTransactedHandle(transactionHandle, path), FileAccess.Write, bufferSize);
+			return new(CreateFileTransactedHandle(transactionHandle, path), FileAccess.Write, bufferSize);
 		}
 
 		/// <summary>
