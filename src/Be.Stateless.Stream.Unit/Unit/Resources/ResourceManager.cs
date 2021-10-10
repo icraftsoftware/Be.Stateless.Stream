@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -72,7 +71,6 @@ namespace Be.Stateless.Unit.Resources
 				});
 		}
 
-		[SuppressMessage("Security", "CA3076:Insecure XSLT script processing.", Justification = "Unit test library that should be deployed at runtime.")]
 		public XslCompiledTransform LoadTransform(string name)
 		{
 			return Load(

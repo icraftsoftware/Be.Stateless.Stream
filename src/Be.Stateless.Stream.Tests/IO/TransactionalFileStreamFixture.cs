@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2020 François Chabot
+// Copyright © 2012 - 2021 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,9 +27,23 @@ namespace Be.Stateless.IO
 {
 	// ensure tests run sequentially to avoid side-effects between them, see https://stackoverflow.com/questions/1408175/execute-unit-tests-serially-rather-than-in-parallel
 	[Collection("TransactionalFile")]
-	[SuppressMessage("Design", "CA1063:Implement IDisposable Correctly")]
 	public class TransactionalFileStreamFixture : IDisposable
 	{
+		#region Setup/Teardown
+
+		public TransactionalFileStreamFixture()
+		{
+			_buffer = Encoding.Unicode.GetBytes("foobar");
+			_filename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".txt");
+		}
+
+		public void Dispose()
+		{
+			File.Delete(_filename);
+		}
+
+		#endregion
+
 		[Fact]
 		public void TransactionCommitHasToBeExplicit()
 		{
@@ -88,17 +102,6 @@ namespace Be.Stateless.IO
 			GC.Collect();
 			GC.WaitForPendingFinalizers();
 			File.Exists(_filename).Should().BeFalse("Transaction should have been rolled back: file is found.");
-		}
-
-		public TransactionalFileStreamFixture()
-		{
-			_buffer = Encoding.Unicode.GetBytes("foobar");
-			_filename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".txt");
-		}
-
-		public void Dispose()
-		{
-			File.Delete(_filename);
 		}
 
 		private readonly byte[] _buffer;

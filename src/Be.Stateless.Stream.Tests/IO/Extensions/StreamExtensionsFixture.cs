@@ -106,6 +106,7 @@ namespace Be.Stateless.IO.Extensions
 			Invoking(() => Convert.FromBase64String(output)).Should().NotThrow();
 		}
 
+		[SuppressMessage("ReSharper", "ReplaceSubstringWithRangeIndexer", Justification = "Wrongly suggested.")]
 		[Fact]
 		public void CompressionStartsAtCurrentPosition()
 		{

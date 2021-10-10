@@ -181,7 +181,6 @@ namespace Be.Stateless.IO
 		/// <returns>
 		/// The array of bytes that could not be appended to the underlying controlled buffer because of availability shortage.
 		/// </returns>
-		[SuppressMessage("Naming", "CA1720:Identifier contains type name")]
 		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 		public byte[] Append(string @string, Encoding encoding)
 		{

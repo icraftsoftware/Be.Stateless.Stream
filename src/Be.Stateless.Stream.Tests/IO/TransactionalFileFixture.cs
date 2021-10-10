@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2020 François Chabot
+// Copyright © 2012 - 2021 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,13 +17,12 @@
 #endregion
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Be.Stateless.Extensions;
 using FluentAssertions;
 using Xunit;
-
 #if NETFRAMEWORK
+using System.Diagnostics.CodeAnalysis;
 using System.Transactions;
 #endif
 
@@ -31,9 +30,24 @@ namespace Be.Stateless.IO
 {
 	// ensure tests run sequentially to avoid side-effects between them, see https://stackoverflow.com/questions/1408175/execute-unit-tests-serially-rather-than-in-parallel
 	[Collection("TransactionalFile")]
-	[SuppressMessage("Design", "CA1063:Implement IDisposable Correctly")]
 	public class TransactionalFileFixture : IDisposable
 	{
+		#region Setup/Teardown
+
+		public TransactionalFileFixture()
+		{
+			_filename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".txt");
+		}
+
+		public void Dispose()
+		{
+			File.Delete(_filename);
+			File.Delete(_filename + ".moved");
+			TransactionalFile._operatingSystem = Environment.OSVersion;
+		}
+
+		#endregion
+
 		[Fact]
 		public void CreateFileStreamTransactedWhenTransactionalFileSystemSupported()
 		{
@@ -136,18 +150,6 @@ namespace Be.Stateless.IO
 			File.Exists(_filename + ".moved").Should().BeFalse();
 		}
 #endif
-
-		public TransactionalFileFixture()
-		{
-			_filename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".txt");
-		}
-
-		public void Dispose()
-		{
-			File.Delete(_filename);
-			File.Delete(_filename + ".moved");
-			TransactionalFile._operatingSystem = Environment.OSVersion;
-		}
 
 		private readonly string _filename;
 	}

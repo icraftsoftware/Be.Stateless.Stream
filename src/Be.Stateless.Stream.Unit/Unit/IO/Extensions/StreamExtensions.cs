@@ -43,7 +43,6 @@ namespace Be.Stateless.Unit.IO.Extensions
 		/// The target <paramref name="folder"/> is created if it does not exist.
 		/// </para>
 		/// </remarks>
-		[SuppressMessage("Globalization", "CA1305:Specify IFormatProvider")]
 		public static void DropToFolder(this Stream stream, string folder, string name)
 		{
 			if (stream == null) throw new ArgumentNullException(nameof(stream));

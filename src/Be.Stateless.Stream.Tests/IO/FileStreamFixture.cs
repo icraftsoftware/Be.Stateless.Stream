@@ -28,7 +28,6 @@ using Xunit;
 
 namespace Be.Stateless.IO
 {
-	[SuppressMessage("Design", "CA1063:Implement IDisposable Correctly")]
 	public class FileStreamFixture : IDisposable
 	{
 		[Fact]
