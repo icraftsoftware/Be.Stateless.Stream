@@ -19,6 +19,8 @@
     <IsPackable>true</IsPackable>
     <PackageId>$(AssemblyName)</PackageId>
     <PackageDescription>$(Description)</PackageDescription>
+    <PackageIconUrl>https://github.com/icraftsoftware/Be.Stateless.Build.Scripts/raw/master/nuget.png</PackageIconUrl>
+    <PackageIcon>nuget.png</PackageIcon>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageTags>stream library extension testing utility</PackageTags>
     <IncludeSymbols>true</IncludeSymbols>
@@ -31,6 +33,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\..\.build\nuget.png" Pack="true" PackagePath="" />
     <None Include="..\..\.settings\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 

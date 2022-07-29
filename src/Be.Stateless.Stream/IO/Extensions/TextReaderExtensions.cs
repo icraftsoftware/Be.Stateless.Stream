@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2020 François Chabot
+// Copyright © 2012 - 2022 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ using System.Xml.Schema;
 
 namespace Be.Stateless.IO.Extensions
 {
+	// TODO move to Be.Stateless.Xml
 	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "Public API.")]
 	public static class TextReaderExtensions
 	{
@@ -41,7 +42,7 @@ namespace Be.Stateless.IO.Extensions
 				ValidationType = ValidationType.None,
 				XmlResolver = null
 			};
-			var isValid = true;
+			var isXml = true;
 			using (var xmlReader = XmlReader.Create(reader, settings))
 			{
 				try
@@ -50,10 +51,10 @@ namespace Be.Stateless.IO.Extensions
 				}
 				catch (XmlException)
 				{
-					isValid = false;
+					isXml = false;
 				}
 			}
-			return isValid;
+			return isXml;
 		}
 	}
 }

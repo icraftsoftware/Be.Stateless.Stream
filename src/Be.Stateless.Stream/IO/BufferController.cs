@@ -56,14 +56,22 @@ namespace Be.Stateless.IO
 			_offset = offset;
 		}
 
+		// TODO add NetSize, GrossSize properties
+		// TODO append return the same array without being copied to new array but with metadata to isolate the trailing/overflowed bytes
+		// TODO public int Avail  ability { get; private set; }
 		/// <summary>
-		/// The number of available bytes than can yet be appended to the underlying controlled buffer.
+		/// The number of available bytes than have yet to be appended to the underlying controlled buffer.
 		/// </summary>
+		// TODO ?? rename to AvailableByteCount / UnappendedByteCount / FlushSize ??
+		// TODO flag this as obsolete and re-expose as alias to new property
 		public int Availability { get; private set; }
+
 
 		/// <summary>
 		/// The total number of bytes that have been appended to the underlying controlled buffer.
 		/// </summary>
+		// TODO ?? rename to AppendedByteCount ??
+		// TODO flag this as obsolete and re-expose as alias to new property
 		public int Count { get; private set; }
 
 		/// <summary>

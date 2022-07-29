@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2021 François Chabot
+// Copyright © 2012 - 2022 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -94,42 +94,41 @@ namespace Be.Stateless.IO
 		/// The number of bytes buffered for writes to the file. It defaults to 4KB.
 		/// </param>
 		/// <param name="transaction">
-		/// An <see cref="IKernelTransaction"/> transaction that is already enlisted with a DTC, or <c>null</c> otherwise.
-		/// It defaults to <c>null</c>.
+		/// An <see cref="IKernelTransaction"/> transaction that is already enlisted with a DTC, or <c>null</c> otherwise. It
+		/// defaults to <c>null</c>.
 		/// </param>
 		/// <returns>
-		/// A <see cref="FileStream"/> or <see cref="TransactionalFileStream"/>, depending on whether the transaction has to
-		/// be explicitly (i.e. not DTC enlisted) managed or not, with the specified buffer size that provides write
-		/// access to the file specified in path.
+		/// A <see cref="FileStream"/> or <see cref="TransactionalFileStream"/>, depending on whether the transaction has to be
+		/// explicitly (i.e. not DTC enlisted) managed or not, with the specified buffer size that provides write access to the
+		/// file specified in path.
 		/// </returns>
 		/// <remarks>
 		/// <para>
-		/// Notice that a <see cref="FileStream"/> can only be transactional if both the file system supports transaction
-		/// &#8212; <see cref="OperatingSystemExtensions"/>.<see
-		/// cref="OperatingSystemExtensions.SupportTransactionalFileSystem"/> &#8212; and the file is not created in a
-		/// network volume &#8212; <see cref="Path"/>.<see cref="Path.IsNetworkPath"/>. For these reasons, the <see
-		/// cref="FileStream"/> created may not be transactional at all if one of these transactional requirements is not
-		/// met.
+		/// Notice that a <see cref="FileStream"/> can only be transactional if both the file system supports transaction &#8212;
+		/// <see cref="OperatingSystemExtensions.SupportTransactionalFileSystem">OperatingSystemExtensions.SupportTransactionalFileSystem</see>
+		/// &#8212; and the file is not created in a network volume &#8212; <see
+		/// cref="Path.IsNetworkPath">Path.IsNetworkPath</see>. For these reasons, the <see cref="FileStream"/> created may not
+		/// be transactional at all if one of these transactional requirements is not met.
 		/// </para>
 		/// <para>
-		/// If both transactional requirements are met and a <c>null</c> <paramref name="transaction"/> has been passed,
-		/// the stream created will be a <see cref="TransactionalFileStream"/> instance. In this case, the client will be in
-		/// charge of <i>explicitly</i> managing the transaction outcome, that is either <see
-		/// cref="TransactionalFileStream.Commit"/> or <see cref="TransactionalFileStream.Rollback"/>.
+		/// If both transactional requirements are met and a <c>null</c> <paramref name="transaction"/> has been passed, the
+		/// stream created will be a <see cref="TransactionalFileStream"/> instance. In this case, the client will be in charge
+		/// of <i>explicitly</i> managing the transaction outcome, that is either <see cref="TransactionalFileStream.Commit"/> or
+		/// <see cref="TransactionalFileStream.Rollback"/>.
 		/// </para>
 		/// <para>
-		/// If both transactional requirements are met and a non <c>null</c> <paramref name="transaction"/> has been
-		/// passed, the stream created will be a regular <see cref="FileStream"/> instance. However it will have been
-		/// created in such a way that the <see cref="FileStream"/> piggybacks the <paramref name="transaction"/> already
-		/// enlisted with a DTC. <b>It is therefore the responsibility of the client to ensure that the non <c>null</c>
-		/// <paramref name="transaction"/> is indeed correctly enlisted with a DTC; the client would have no way to
-		/// determine the outcome of the transaction otherwise.</b>
+		/// If both transactional requirements are met and a non <c>null</c> <paramref name="transaction"/> has been passed, the
+		/// stream created will be a regular <see cref="FileStream"/> instance. However it will have been created in such a way
+		/// that the <see cref="FileStream"/> piggybacks the <paramref name="transaction"/> already enlisted with a DTC. <b>It is
+		/// therefore the responsibility of the client to ensure that the non <c>null</c> <paramref name="transaction"/> is
+		/// indeed correctly enlisted with a DTC; the client would have no way to determine the outcome of the transaction
+		/// otherwise.</b>
 		/// </para>
 		/// <para>
-		/// If not both transactional requirements are met, and irrelevantly of the passed <paramref name="transaction"/>,
-		/// the stream created will always be a regular <see cref="FileStream"/> instance with no underlying transaction.
-		/// The client has therefore no way of distinguishing a transactional <see cref="FileStream"/> enlisted with a DTC
-		/// from non transactional one.
+		/// If not both transactional requirements are met, and irrelevantly of the passed <paramref name="transaction"/>, the
+		/// stream created will always be a regular <see cref="FileStream"/> instance with no underlying transaction. The client
+		/// has therefore no way of distinguishing a transactional <see cref="FileStream"/> enlisted with a DTC from non
+		/// transactional one.
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="OperatingSystemExtensions"/>
